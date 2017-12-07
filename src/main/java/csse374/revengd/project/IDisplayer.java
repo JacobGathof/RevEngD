@@ -1,4 +1,5 @@
 package csse374.revengd.project;
 
-public class IDisplayer {
+public interface IDisplayer {
+    void display(String UML);
 }

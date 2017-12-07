@@ -1,4 +1,7 @@
 package csse374.revengd.project;
 
-public class IBuilder {
+import java.util.List;
+
+public interface IBuilder {
+    String build(List<IUMLObject> objects);
 }

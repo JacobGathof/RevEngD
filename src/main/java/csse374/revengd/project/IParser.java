@@ -1,4 +1,7 @@
 package csse374.revengd.project;
 
-public class IParser {
+import java.util.List;
+
+public interface IParser {
+    List<IUMLObject> parse(String path);
 }

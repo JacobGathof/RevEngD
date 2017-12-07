@@ -1,5 +1,7 @@
 package csse374.revengd.project;
 
+import java.util.List;
+
 public class Runner {
     private IParser parser;
 
@@ -7,15 +9,28 @@ public class Runner {
 
     private IDisplayer displayer;
 
-    public List<IUMLObject> parse(String path){
+    String path;
 
+    public Runner(IParser parser, IBuilder builder, IDisplayer displayer, String path){
+        this.parser = parser;
+        this.builder = builder;
+        this.displayer = displayer;
+        this.path = path;
     }
 
-    public String build(List<IUMLObject>){
+    public void run(){
+        display(build(parse(path)));
+    }
 
+    private List<IUMLObject> parse(String path){
+        return parser.parse(path);
+    }
+
+    private String build(List<IUMLObject> objects){
+        return builder.build(objects);
     }
 
     public void display(String UML){
-
+        displayer.display(UML);
     }
 }

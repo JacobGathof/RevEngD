@@ -1,4 +1,5 @@
 package csse374.revengd.project;
 
-public class IUMLObject {
+public interface IUMLObject {
+    String toUML();
 }
