@@ -5,6 +5,14 @@ import java.util.List;
 public class PlantUMLBuilder implements IBuilder {
     @Override
     public String build(List<IUMLObject> objects) {
-        return null;
+        StringBuilder builder = new StringBuilder();
+        builder.append("@startuml\n");
+        
+        for(IUMLObject obj : objects) {
+        	builder.append(obj.toUML() + "\n");
+        }
+        
+        builder.append("@enduml");
+        return builder.toString();
     }
 }
