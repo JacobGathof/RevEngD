@@ -3,13 +3,11 @@ package csse374.revengd.project;
 import java.util.List;
 
 public class Runner {
+	
     private IParser parser;
-
     private IBuilder builder;
-
     private IDisplayer displayer;
-
-    String path;
+    private String path;
 
     public Runner(IParser parser, IBuilder builder, IDisplayer displayer, String path){
         this.parser = parser;
@@ -19,7 +17,10 @@ public class Runner {
     }
 
     public void run(){
-        display(build(parse(path)));
+    	System.out.println(path);
+    	System.out.println(build(parse(path)));
+    	
+        //display(build(parse(path)));
     }
 
     private List<IUMLObject> parse(String path){
