@@ -9,6 +9,7 @@ public class App {
 
 		IParser parser = new MasterParser();
 		parser = new NonRecursiveParserFilter(parser);
+		parser = new PrivacyParserFilter(parser);
 
 		IBuilder builder = new PlantUMLBuilder();
 		IDisplayer displayer = new PlantDisplayer();
