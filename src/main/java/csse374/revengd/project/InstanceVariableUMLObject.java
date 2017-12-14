@@ -18,4 +18,9 @@ public class InstanceVariableUMLObject implements IUMLObject{
         return source.getName() + " : " + target.getDeclaration();
     }
 
+	@Override
+	public int getModifiers() {
+		return target.getModifiers();
+	}
+
 }

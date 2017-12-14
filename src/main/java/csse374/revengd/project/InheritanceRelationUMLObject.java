@@ -16,4 +16,10 @@ public class InheritanceRelationUMLObject implements IUMLObject {
     public String toUML() {
         return child.getName() + " --|> " + parent.getName();
     }
+
+
+	@Override
+	public int getModifiers() {
+		return child.getModifiers();
+	}
 }

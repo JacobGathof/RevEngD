@@ -13,4 +13,9 @@ public class InterfaceUMLObject implements IUMLObject{
     public String toUML() {
         return "interface " + inter.getName();
     }
+
+	@Override
+	public int getModifiers() {
+		return inter.getModifiers();
+	}
 }

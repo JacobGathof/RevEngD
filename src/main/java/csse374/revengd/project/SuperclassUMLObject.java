@@ -17,5 +17,11 @@ public class SuperclassUMLObject implements IUMLObject {
     public String toUML() {
         return source.getName() + " <|-- " + target.getName();
     }
+
+	@Override
+	public int getModifiers() {
+		return source.getModifiers();
+	}
+    
     
 }
