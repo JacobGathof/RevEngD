@@ -1,5 +1,6 @@
 package csse374.revengd.project;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class NonRecursiveParserFilter implements IParserFilter{
@@ -15,6 +16,36 @@ public class NonRecursiveParserFilter implements IParserFilter{
     }
 
     public List<IUMLObject> parse(String path, String[] args) {
-        return process(parser.parse(path, args));
+    	List<IUMLObject> sootObjects = parser.parse(path, args);
+    	
+    	if(Arrays.asList(args).contains("-r")){
+    		return sootObjects;
+    	} else {
+    		
+    	}
+    	
+		/*for(String argument : args){
+			if(argument.charAt(0) == '-'){
+				if(argument.length() == 3){
+					if(argument.charAt(1) == 'r'){
+						switch(argument.charAt(2)){
+						case 'r':
+							privacy = -1;
+							sootObjects.
+							break;
+							
+						case 'o':
+							privacy = 0;
+							return process(sootObjects);
+						case 'u':
+							privacy = 1;
+							return process(sootObjects);
+						}
+						return sootObjects;
+					}
+				}
+			}
+		}*/
+		return sootObjects;
     }
 }

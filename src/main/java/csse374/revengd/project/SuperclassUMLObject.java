@@ -23,5 +23,9 @@ public class SuperclassUMLObject implements IUMLObject {
 		return source.getModifiers();
 	}
     
+	@Override
+	public SootClass getSootClass() {
+		return source;
+	}
     
 }

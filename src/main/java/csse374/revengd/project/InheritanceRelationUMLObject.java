@@ -22,4 +22,10 @@ public class InheritanceRelationUMLObject implements IUMLObject {
 	public int getModifiers() {
 		return child.getModifiers();
 	}
+
+
+	@Override
+	public SootClass getSootClass() {
+		return child;
+	}
 }

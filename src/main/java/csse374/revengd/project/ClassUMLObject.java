@@ -20,5 +20,10 @@ public class ClassUMLObject implements IUMLObject{
 	public int getModifiers() {
 		return clazz.getModifiers();
 	}
+	
+	@Override
+	public SootClass getSootClass() {
+		return clazz;
+	}
     
 }

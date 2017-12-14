@@ -22,5 +22,10 @@ public class InstanceVariableUMLObject implements IUMLObject{
 	public int getModifiers() {
 		return target.getModifiers();
 	}
+	
+	@Override
+	public SootClass getSootClass() {
+		return source;
+	}
 
 }

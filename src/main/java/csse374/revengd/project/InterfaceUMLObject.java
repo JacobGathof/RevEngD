@@ -18,4 +18,9 @@ public class InterfaceUMLObject implements IUMLObject{
 	public int getModifiers() {
 		return inter.getModifiers();
 	}
+	
+	@Override
+	public SootClass getSootClass() {
+		return inter;
+	}
 }

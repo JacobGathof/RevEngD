@@ -24,4 +24,8 @@ public class MethodUMLObject implements IUMLObject{
 		return target.getModifiers();
 	}
     
+	@Override
+	public SootClass getSootClass() {
+		return source;
+	}
 }
