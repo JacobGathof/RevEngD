@@ -13,11 +13,6 @@ import soot.javaToJimple.IInitialResolver;
 import soot.util.Chain;
 
 public class SourceParser implements IParser{
-	int depth;
-
-	public SourceParser(int depth){
-		this.depth = depth;
-	}
 
     @Override
     public List<IUMLObject> parse(String path) {
@@ -25,16 +20,16 @@ public class SourceParser implements IParser{
 
 		SootClass clazz = Scene.v().loadClassAndSupport(path);
 
-		umlObjects = parseHelper(clazz, 0, depth);
+		umlObjects = parseHelper(clazz);
 
         return umlObjects;
     }
 
-    private List<IUMLObject> parseHelper(SootClass clazz, int curDepth, int goalDepth){
+    private List<IUMLObject> parseHelper(SootClass clazz){
     	ArrayList<IUMLObject> umlObjects = new ArrayList<>();
     	ArrayList<SootClass> dependencies = new ArrayList<>();
 
-    	if(clazz == null || (curDepth == goalDepth + 1 && goalDepth != -1)){
+    	if(clazz == null){
     		return umlObjects;
 		}
 
@@ -63,7 +58,7 @@ public class SourceParser implements IParser{
 		});
 
 		for(SootClass c : dependencies){
-			umlObjects.addAll(parseHelper(c, curDepth + 1, goalDepth));
+			umlObjects.addAll(parseHelper(c));
 		}
 
 		return umlObjects;

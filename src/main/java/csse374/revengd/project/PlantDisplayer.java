@@ -15,15 +15,18 @@ public class PlantDisplayer implements IDisplayer{
 
     	SourceStringReader reader = new SourceStringReader(UML);
 		try {
-			Path filePath = Paths.get(System.getProperty("user.dir"), "build", "plantuml", "diagram.png");
+			Path filePath = Paths.get("./", "build", "plantuml", "diagram.png");
+			System.out.println(filePath);
 			Files.createDirectories(filePath.getParent());
 				
 			OutputStream outStream = new FileOutputStream(filePath.toFile());
 			FileFormatOption option = new FileFormatOption(FileFormat.PNG, false);
 			reader.outputImage(outStream, option);
-			
-			Desktop.getDesktop().open(filePath.toFile());
-			Files.deleteIfExists(filePath);
+
+			if(Desktop.isDesktopSupported()) {
+				Desktop.getDesktop().open(filePath.toFile());
+				//Files.deleteIfExists(filePath);
+			}
 			
 		} catch (Exception e) {
 			
