@@ -1,13 +1,15 @@
 package csse374.revengd.project;
 
+import javax.lang.model.SourceVersion;
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
 public class App {
     public static void main(String[] args){
         String path = args[0];
         int i = 1;
-        if(i >= args.length){
+        if(i < args.length){
 	        if(args[i].charAt(0) == '-'){
 	        	if (args[i].length() == 1){
 	        		System.out.println("Invalid input option");
@@ -50,20 +52,28 @@ public class App {
         for(int i = 1; i < args.length; i++){
         	classes[i-1] = args[i];
         }*/
-        
-        
-        
-        IParser parser = new SourceParser();
-        IBuilder builder = new PlantUMLBuilder();
-        IDisplayer displayer = new PlantDisplayer();
-        //String p = new File("src\\main\\java\\csse374\\revengd\\examples\\fixtures").getAbsolutePath();
-        String p = new File(path).getAbsolutePath();
-        //String what = System.getProperty("user.dir");
-        //p = Paths.get(System.getProperty("user.dir"), "build", "classes", "main").toString();
-        		
-        Runner runner = new Runner(parser, builder, displayer, path);
 
-        //Runner runner = new Runner(parser, builder, displayer, p);
-        runner.run();
+
+		try{
+			ArrayList<Class> classes = new ArrayList<>();
+			Class clazz = Class.forName(path);
+			classes.add(clazz);
+			IParser parser = new SourceParser();
+			IBuilder builder = new PlantUMLBuilder();
+			IDisplayer displayer = new PlantDisplayer();
+			//String p = new File("src\\main\\java\\csse374\\revengd\\examples\\fixtures").getAbsolutePath();
+			String p = new File(path).getAbsolutePath();
+			//String what = System.getProperty("user.dir");
+			//p = Paths.get(System.getProperty("user.dir"), "build", "classes", "main").toString();
+
+			Runner runner = new Runner(parser, builder, displayer, classes);
+
+			//Runner runner = new Runner(parser, builder, displayer, p);
+			runner.run();
+		}
+		catch(ClassNotFoundException c){
+			System.out.println("No valid class " + path);
+			return;
+		}
     }
 }
