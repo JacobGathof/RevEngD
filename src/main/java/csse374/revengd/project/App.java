@@ -42,7 +42,6 @@ public class App {
 		        		} else {
 		        			System.out.println("Invalid input in recursive command");
 		        		}
-	        	
 	        	}
 	        }
         }
