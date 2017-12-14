@@ -2,11 +2,11 @@ package csse374.revengd.project;
 
 import java.util.List;
 
-public class RecursiveParserFilter implements IParserFilter{
+public class NonRecursiveParserFilter implements IParserFilter{
 
     IParser parser;
 
-    public RecursiveParserFilter(IParser parser){
+    public NonRecursiveParserFilter(IParser parser){
         this.parser = parser;
     }
 

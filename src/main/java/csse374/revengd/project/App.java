@@ -1,9 +1,6 @@
 package csse374.revengd.project;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class App {
     public static void main(String[] args){
@@ -11,7 +8,7 @@ public class App {
     	ArrayList<String> classNames = new ArrayList<>();
 
 		IParser parser = new MasterParser();
-		parser = new RecursiveParserFilter(parser);
+		parser = new NonRecursiveParserFilter(parser);
 
 		IBuilder builder = new PlantUMLBuilder();
 		IDisplayer displayer = new PlantDisplayer();
