@@ -7,10 +7,13 @@ import java.util.ArrayList;
 
 public class App {
     public static void main(String[] args){
+    	ArrayList<Class> classes = new ArrayList<>();
+    	int depth = 0;
+    	
         String path = args[0];
         int i = 1;
         if(i < args.length){
-	        if(args[i].charAt(0) == '-'){
+	        while(args[i].charAt(0) == '-'){
 	        	if (args[i].length() == 1){
 	        		System.out.println("Invalid input option");
 	        		return;
@@ -33,19 +36,43 @@ public class App {
 		        		} break;
 		        	
 		        	case 'r':
-		        		if(args[i].length() > 3 || args[i].length() < 3){
+		        		depth = -1;
+		        		if(args[i].length() > 2 || args[i].length() < 2){
 		        			System.out.println("Invlaid input in recursive command");
-		        		}
-		        		char yOrN = args[i].charAt(2);
-		        		if (yOrN == 'y'){
-		        			//TODO Recursive thing
-		        		} else if (yOrN == 'n'){
-		        			//TODO Not Recursively.
 		        		} else {
-		        			System.out.println("Invalid input in recursive command");
+		        			i++;
+		        			//TODO Make Recursive thing
+		        			if (i < args[i].length()){
+		        				try{
+		        					depth = Integer.parseInt(args[i]);
+		        				}
+		        				catch (NumberFormatException e){
+		        					depth = -1;
+		        					continue;
+		        				}
+		        			}
+		        			
+		        			
 		        		}
+		        			//TODO Recursive thing
+		        		
+		        		break;
 	        	}
+	        	i++;
+	        } 
+	        try{
+	        	
+		        for (;i < args.length; i++){
+		        	String thisClass = args[i];
+		        	String testing = path + "\\" + thisClass;
+					Class clazz = Class.forName(testing);
+					classes.add(clazz);
+		        }
 	        }
+	        catch(ClassNotFoundException c){
+				System.out.println("No valid class " + path);
+				return;
+			}
         }
         /*
         String[] classes = new String[args.length - 1];
@@ -54,11 +81,9 @@ public class App {
         }*/
 
 
-		try{
-			ArrayList<Class> classes = new ArrayList<>();
-			Class clazz = Class.forName(path);
-			classes.add(clazz);
-			IParser parser = new SourceParser();
+		
+			
+			IParser parser = new SourceParser(depth);
 			IBuilder builder = new PlantUMLBuilder();
 			IDisplayer displayer = new PlantDisplayer();
 			//String p = new File("src\\main\\java\\csse374\\revengd\\examples\\fixtures").getAbsolutePath();
@@ -70,10 +95,7 @@ public class App {
 
 			//Runner runner = new Runner(parser, builder, displayer, p);
 			runner.run();
-		}
-		catch(ClassNotFoundException c){
-			System.out.println("No valid class " + path);
-			return;
-		}
+		
+		
     }
 }
