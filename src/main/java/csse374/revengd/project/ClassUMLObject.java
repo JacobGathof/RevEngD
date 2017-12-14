@@ -5,17 +5,15 @@ import soot.SootMethod;
 
 public class ClassUMLObject implements IUMLObject{
 	
-	private SootClass source;
-	private SootClass target;
+	private SootClass clazz;
 	
-	public ClassUMLObject(SootClass source, SootClass target) {
-		this.source = source;
-		this.target = target;
+	public ClassUMLObject(SootClass c) {
+		this.clazz = c;
 	}
 	
     @Override
     public String toUML() {
-        return source.getName() + " <|-- " + target.getName();
+        return "class " + clazz.getName();
     }
     
 }

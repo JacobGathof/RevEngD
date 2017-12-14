@@ -40,12 +40,15 @@ public class SourceParser implements IParser{
 
 		if(clazz.hasSuperclass()) {
 			dependencies.add(clazz.getSuperclass());
+			umlObjects.add(new ClassUMLObject(clazz.getSuperclass()));
 			umlObjects.add(new InheritanceRelationUMLObject(clazz, clazz.getSuperclass()));
 		}
 
 		clazz.getInterfaces().forEach(i ->{
-			IUMLObject obj = new ClassUMLObject(clazz, i);
+			IUMLObject inter = new InterfaceUMLObject(i);
+			IUMLObject obj = new InheritanceRelationUMLObject(clazz, i);
 			umlObjects.add(obj);
+			umlObjects.add(inter);
 			dependencies.add(i);
 		});
 
