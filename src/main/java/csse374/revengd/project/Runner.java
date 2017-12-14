@@ -26,7 +26,7 @@ public class Runner {
             System.out.println("Parsing " + c.getName());
             objects.addAll(parse(c.getName()));
         }
-    	System.out.println(build(objects));
+    	display(build(objects));
     	
         //display(build(parse(path)));
     }

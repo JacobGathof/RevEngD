@@ -23,6 +23,7 @@ public class PlantDisplayer implements IDisplayer{
 			reader.outputImage(outStream, option);
 			
 			Desktop.getDesktop().open(filePath.toFile());
+			Files.deleteIfExists(filePath);
 			
 		} catch (Exception e) {
 			
