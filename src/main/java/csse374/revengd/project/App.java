@@ -13,6 +13,12 @@ public class App {
 		IBuilder builder = new PlantUMLBuilder();
 		IDisplayer displayer = new PlantDisplayer();
 
+		for(String arg : args){
+			if(!arg.startsWith("-")){
+				classNames.add(arg);
+			}
+		}
+
     	try{
 			for (String name : classNames){
 				Class clazz = Class.forName(name);
