@@ -12,7 +12,7 @@ import soot.*;
 import soot.javaToJimple.IInitialResolver;
 import soot.util.Chain;
 
-public class SourceParser implements IParser{
+public class MasterParser implements IParser{
 
     @Override
     public List<IUMLObject> parse(String path) {

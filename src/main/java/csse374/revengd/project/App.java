@@ -1,8 +1,5 @@
 package csse374.revengd.project;
 
-import javax.lang.model.SourceVersion;
-import java.io.File;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +12,7 @@ public class App {
 		Map<String, Class> filterMap = new HashMap<>();
 		filterMap.put("-r", RecursiveParserFilter.class);
 
-		IParser parser = new SourceParser();
+		IParser parser = new MasterParser();
 		IBuilder builder = new PlantUMLBuilder();
 		IDisplayer displayer = new PlantDisplayer();
 
