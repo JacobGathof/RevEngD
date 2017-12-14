@@ -1,5 +1,8 @@
 package csse374.revengd.project;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Runner {
@@ -7,18 +10,23 @@ public class Runner {
     private IParser parser;
     private IBuilder builder;
     private IDisplayer displayer;
-    private String path;
+    private List<Class> classes;
 
-    public Runner(IParser parser, IBuilder builder, IDisplayer displayer, String path){
+    public Runner(IParser parser, IBuilder builder, IDisplayer displayer, List<Class> classes){
         this.parser = parser;
         this.builder = builder;
         this.displayer = displayer;
-        this.path = path;
+        this.classes = classes;
     }
 
     public void run(){
-    	System.out.println(path);
-    	System.out.println(build(parse(path)));
+        List<IUMLObject> objects = new ArrayList<>();
+        for(Class c : classes){
+            //File f = new File(c.getProtectionDomain().getCodeSource().getLocation().getPath());
+            System.out.println(c.getName());
+            objects.addAll(parse(c.getName()));
+        }
+    	System.out.println(build(objects));
     	
         //display(build(parse(path)));
     }
