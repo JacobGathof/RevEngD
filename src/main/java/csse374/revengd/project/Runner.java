@@ -23,7 +23,7 @@ public class Runner {
         List<IUMLObject> objects = new ArrayList<>();
         for(Class c : classes){
             //File f = new File(c.getProtectionDomain().getCodeSource().getLocation().getPath());
-            System.out.println(c.getName());
+            System.out.println("Parsing " + c.getName());
             objects.addAll(parse(c.getName()));
         }
     	System.out.println(build(objects));

@@ -8,55 +8,68 @@ import java.util.List;
 
 import csse374.revengd.soot.MainMethodMatcher;
 import csse374.revengd.soot.SceneBuilder;
-import soot.Hierarchy;
-import soot.Scene;
-import soot.SootClass;
+import soot.*;
+import soot.javaToJimple.IInitialResolver;
+import soot.util.Chain;
 
 public class SourceParser implements IParser{
+	int depth;
+
+	public SourceParser(int depth){
+		this.depth = depth;
+	}
+
     @Override
     public List<IUMLObject> parse(String path) {
-    	List<IUMLObject> umlObjects = new ArrayList<IUMLObject>();
-		
-    	Scene scene = setupScene(path);
-		
-		System.out.println("==============================================================");
-		System.out.println("Application classes loaded by SOOT:");
-		
-		scene.getApplicationClasses().forEach(clazz -> {
-			
-			clazz.getInterfaces().forEach(i ->{
-				IUMLObject obj = new ClassUMLObject(clazz, i);
-				umlObjects.add(obj);
-			});
-			
-			
-			clazz.getMethods().forEach(m->{
-				IUMLObject obj = new MethodUMLObject(clazz, m);
-				umlObjects.add(obj);
-			});
-			
-			clazz.getFields().forEach(f->{
-				IUMLObject obj = new InstanceVariableUMLObject(clazz, f);
-				umlObjects.add(obj);
-			});
-			
-		});
-		
-		//SootClass appClass = scene.getSootClass("csse374.revengd.examples.fixtures.CalculatorApp");
-  
-		//Hierarchy typeHierarchy = scene.getActiveHierarchy();
-		//SootClass iCalculator = scene.getSootClass("csse374.revengd.examples.fixtures.ICalculator");
-		//Collection<SootClass> implementors = typeHierarchy.getImplementersOf(iCalculator);
-    	
+    	List<IUMLObject> umlObjects;
+
+		SootClass clazz = Scene.v().loadClassAndSupport(path);
+
+		umlObjects = parseHelper(clazz, 0, depth);
+
         return umlObjects;
     }
+
+    private List<IUMLObject> parseHelper(SootClass clazz, int curDepth, int goalDepth){
+    	ArrayList<IUMLObject> umlObjects = new ArrayList<>();
+    	ArrayList<SootClass> dependencies = new ArrayList<>();
+
+    	if(clazz == null || (curDepth == goalDepth + 1 && goalDepth != -1)){
+    		return umlObjects;
+		}
+
+		if(clazz.hasSuperclass()) {
+			dependencies.add(clazz.getSuperclass());
+			umlObjects.add(new InheritanceRelationUMLObject(clazz, clazz.getSuperclass()));
+		}
+
+		clazz.getInterfaces().forEach(i ->{
+			IUMLObject obj = new ClassUMLObject(clazz, i);
+			umlObjects.add(obj);
+			dependencies.add(i);
+		});
+
+		clazz.getMethods().forEach(m->{
+			IUMLObject obj = new MethodUMLObject(clazz, m);
+			umlObjects.add(obj);
+		});
+
+		clazz.getFields().forEach(f->{
+			IUMLObject obj = new InstanceVariableUMLObject(clazz, f);
+			umlObjects.add(obj);
+		});
+
+		for(SootClass c : dependencies){
+			umlObjects.addAll(parseHelper(c, curDepth + 1, goalDepth));
+		}
+
+		return umlObjects;
+	}
     
     public Scene setupScene(String path) {
     	Scene scene = SceneBuilder.create()
 				.addDirectory(path)												
-				.setEntryClass("csse374.revengd.project.App")	
-				.addEntryPointMatcher(new MainMethodMatcher("csse374.revengd.project.App"))	
-				.addExclusions(Arrays.asList("java.*", "javax.*", "sun.*"))
+				.setEntryClass("path")
 				.addExclusions(Arrays.asList("soot.*", "polygot.*"))
 				.addExclusions(Arrays.asList("org.*", "com.*"))	
 				.build();	
