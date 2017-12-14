@@ -2,6 +2,7 @@ package csse374.revengd.project;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class App {
@@ -9,28 +10,11 @@ public class App {
     	ArrayList<Class> classes = new ArrayList<>();
     	ArrayList<String> classNames = new ArrayList<>();
 
-		Map<String, Class> filterMap = new HashMap<>();
-		filterMap.put("-r", RecursiveParserFilter.class);
-
 		IParser parser = new MasterParser();
+		parser = new RecursiveParserFilter(parser);
+
 		IBuilder builder = new PlantUMLBuilder();
 		IDisplayer displayer = new PlantDisplayer();
-
-    	for(String arg : args){
-    		String[] parsedArg = arg.split("_");
-    		if(filterMap.containsKey(parsedArg[0])){
-    			try{
-					parser = (IParser)filterMap.get(parsedArg[0]).getConstructors()[0].newInstance(parser, arg);
-    			}
-    			catch(Exception e){
-    				System.out.println(e);
-				}
-			}
-			else{
-    			classNames.add(arg);
-			}
-		}
-
 
     	try{
 			for (String name : classNames){
@@ -46,7 +30,7 @@ public class App {
 		Runner runner = new Runner(parser, builder, displayer, classes);
 
 		//Runner runner = new Runner(parser, builder, displayer, p);
-		runner.run();
+		runner.run(args);
 		
 		
     }

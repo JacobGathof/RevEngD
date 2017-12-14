@@ -19,20 +19,20 @@ public class Runner {
         this.classes = classes;
     }
 
-    public void run(){
+    public void run(String[] args){
         List<IUMLObject> objects = new ArrayList<>();
         for(Class c : classes){
             //File f = new File(c.getProtectionDomain().getCodeSource().getLocation().getPath());
             System.out.println("Parsing " + c.getName());
-            objects.addAll(parse(c.getName()));
+            objects.addAll(parse(c.getName(), args));
         }
     	display(build(objects));
     	
         //display(build(parse(path)));
     }
 
-    private List<IUMLObject> parse(String path){
-        return parser.parse(path);
+    private List<IUMLObject> parse(String path, String[] args){
+        return parser.parse(path, args);
     }
 
     private String build(List<IUMLObject> objects){

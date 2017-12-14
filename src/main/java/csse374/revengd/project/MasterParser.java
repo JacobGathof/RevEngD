@@ -15,7 +15,7 @@ import soot.util.Chain;
 public class MasterParser implements IParser{
 
     @Override
-    public List<IUMLObject> parse(String path) {
+    public List<IUMLObject> parse(String path, String[] args) {
     	List<IUMLObject> umlObjects;
 
 		SootClass clazz = Scene.v().loadClassAndSupport(path);
