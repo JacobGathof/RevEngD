@@ -21,7 +21,13 @@ public class NonRecursiveParserFilter implements IParserFilter{
     	if(Arrays.asList(args).contains("-r")){
     		return sootObjects;
     	} else {
-    		
+    		for(int i = 0; i < sootObjects.size(); i++) {
+    			IUMLObject obj = sootObjects.get(i);
+    			if(!Arrays.asList(args).contains(obj.getSootClass().getName())) {
+    				sootObjects.remove(obj);
+    				i--;
+    			}
+    		}
     	}
     	
 		/*for(String argument : args){
