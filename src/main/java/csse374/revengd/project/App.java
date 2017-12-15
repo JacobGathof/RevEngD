@@ -16,6 +16,7 @@ public class App {
 		//Create and decorate parser with its filters
 		IParser parser = new MasterParser(args[0]);
 		parser = new NonRecursiveParserFilter(parser);
+		parser = new PrivacyParserFilter(parser);
 
 		IBuilder builder = new PlantUMLBuilder();
 		IDisplayer displayer = new PlantDisplayer();

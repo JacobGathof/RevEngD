@@ -15,5 +15,15 @@ public class ClassUMLObject implements IUMLObject{
     public String toUML() {
         return "class " + clazz.getName();
     }
+
+	@Override
+	public int getModifiers() {
+		return clazz.getModifiers();
+	}
+	
+	@Override
+	public SootClass getSootClass() {
+		return clazz;
+	}
     
 }

@@ -17,5 +17,15 @@ public class MethodUMLObject implements IUMLObject{
     public String toUML() {
         return source.getName() + " : " + target.getDeclaration();
     }
+
+	@Override
+	public int getModifiers() {
+		
+		return target.getModifiers();
+	}
     
+	@Override
+	public SootClass getSootClass() {
+		return source;
+	}
 }
