@@ -14,6 +14,9 @@ public class InheritanceRelationUMLObject implements IUMLObject {
 
     @Override
     public String toUML() {
+    	if(parent.isInterface()) {
+    		return child.getName() + " ..|> " + parent.getName();
+    	}
         return child.getName() + " --|> " + parent.getName();
     }
 
