@@ -13,4 +13,9 @@ The project currently features 4 command line arguments:
 
 
 ## Team Contribution
+All members contributed to the repo in commits, and were present during design decisions.
+
+Jack worked on the Filters, and command line parsing that was originally used. 
+Jack also edited the IUMLObject and classes that implement it to include what is necessary for most filters.
+
 The project is configured to use Log4J, which you can also use for your own classes. See [SceneBuilder API](/src/main/java/csse374/revengd/soot/SceneBuilder.java) for an example. 
