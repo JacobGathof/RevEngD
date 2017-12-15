@@ -19,6 +19,8 @@ public class PlantUMLBuilder implements IBuilder {
         	builder.append(s + "\n");
         }
         
+        System.out.println(builder.toString());
+        
         builder.append("@enduml");
         return builder.toString();
     }
