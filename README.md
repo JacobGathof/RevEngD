@@ -15,7 +15,7 @@ The command line arguement should also contain a path to the root folder at the 
 
 The command line after java invocation should look like
 
-<Path> <options> <classes>
+"Path" "options" "classes"
 
 
 ## Team Contribution
