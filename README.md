@@ -11,6 +11,12 @@ The project currently features 4 command line arguments:
 3. [-po] - Include public and protected fields, methods, and classes
 4. [-pr] - Include fields, methods, and classes of any visibility
 
+The command line arguement should also contain a path to the root folder at the start and all of the base files you want to examine with a fully qualified name.
+
+The command line after java invocation should look like
+
+"Path" "options" "classes"
+
 
 ## Team Contribution
 All members contributed to the repo in commits, and were present during design decisions.
