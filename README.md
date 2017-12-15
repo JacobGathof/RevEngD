@@ -23,5 +23,5 @@ Jake -  worked on the IUMLObjects and original sourceParser.
         Set up the building and displaying of the UML diagrams
         
 
-Trevor -
+Trevor - Worked on MasterParser, main method, command line arguments.  Worked on original UML diagram and designed filters.  Created workaround to avoid using SceneBuilder so it isn't necessary
 
