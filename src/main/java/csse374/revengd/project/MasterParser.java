@@ -33,7 +33,6 @@ public class MasterParser implements IParser{
     	List<IUMLObject> umlObjects;
 
     	SootClass clazz = v.loadClassAndSupport(className);
-		System.out.println(clazz.getName());
 		umlObjects = parseHelper(clazz);
 
         return umlObjects;
