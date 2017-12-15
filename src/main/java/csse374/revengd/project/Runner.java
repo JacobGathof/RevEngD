@@ -5,6 +5,11 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import csse374.revengd.project.builder.IBuilder;
+import csse374.revengd.project.displayer.IDisplayer;
+import csse374.revengd.project.parsers.IParser;
+import csse374.revengd.project.umlobjects.IUMLObject;
+
 public class Runner {
 	
     private IParser parser;

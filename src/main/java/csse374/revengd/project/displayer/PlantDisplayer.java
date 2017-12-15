@@ -1,4 +1,4 @@
-package csse374.revengd.project;
+package csse374.revengd.project.displayer;
 
 import java.awt.Desktop;
 import java.io.FileOutputStream;

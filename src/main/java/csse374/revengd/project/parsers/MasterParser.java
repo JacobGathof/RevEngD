@@ -1,4 +1,4 @@
-package csse374.revengd.project;
+package csse374.revengd.project.parsers;
 
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -6,6 +6,12 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import csse374.revengd.project.umlobjects.ClassUMLObject;
+import csse374.revengd.project.umlobjects.IUMLObject;
+import csse374.revengd.project.umlobjects.InheritanceRelationUMLObject;
+import csse374.revengd.project.umlobjects.InstanceVariableUMLObject;
+import csse374.revengd.project.umlobjects.InterfaceUMLObject;
+import csse374.revengd.project.umlobjects.MethodUMLObject;
 import csse374.revengd.soot.MainMethodMatcher;
 import csse374.revengd.soot.SceneBuilder;
 import soot.*;

@@ -7,6 +7,15 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 
+import csse374.revengd.project.builder.IBuilder;
+import csse374.revengd.project.builder.PlantUMLBuilder;
+import csse374.revengd.project.displayer.IDisplayer;
+import csse374.revengd.project.displayer.PlantDisplayer;
+import csse374.revengd.project.parsers.IParser;
+import csse374.revengd.project.parsers.MasterParser;
+import csse374.revengd.project.parsers.NonRecursiveParserFilter;
+import csse374.revengd.project.parsers.PrivacyParserFilter;
+
 public class App {
     public static void main(String[] args){
     	ArrayList<String> classNames = new ArrayList<>();

@@ -1,4 +1,4 @@
-package csse374.revengd.project;
+package csse374.revengd.project.umlobjects;
 
 import soot.SootClass;
 

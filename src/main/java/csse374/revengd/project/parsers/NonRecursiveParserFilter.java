@@ -1,7 +1,9 @@
-package csse374.revengd.project;
+package csse374.revengd.project.parsers;
 
 import java.util.Arrays;
 import java.util.List;
+
+import csse374.revengd.project.umlobjects.IUMLObject;
 
 public class NonRecursiveParserFilter implements IParserFilter{
 
