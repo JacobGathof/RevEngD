@@ -10,9 +10,9 @@ public class Runner {
     private IParser parser;
     private IBuilder builder;
     private IDisplayer displayer;
-    private List<Class> classes;
+    private List<String> classes;
 
-    public Runner(IParser parser, IBuilder builder, IDisplayer displayer, List<Class> classes){
+    public Runner(IParser parser, IBuilder builder, IDisplayer displayer, List<String> classes){
         this.parser = parser;
         this.builder = builder;
         this.displayer = displayer;
@@ -21,10 +21,10 @@ public class Runner {
 
     public void run(String[] args){
         List<IUMLObject> objects = new ArrayList<>();
-        for(Class c : classes){
+        for(String c : classes){
             //File f = new File(c.getProtectionDomain().getCodeSource().getLocation().getPath());
-            System.out.println("Parsing " + c.getName());
-            objects.addAll(parse(c.getName(), args));
+            System.out.println("Parsing " + c);
+            objects.addAll(parse(c, args));
         }
     	display(build(objects));
     	

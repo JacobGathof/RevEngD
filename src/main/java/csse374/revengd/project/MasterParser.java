@@ -10,16 +10,30 @@ import csse374.revengd.soot.MainMethodMatcher;
 import csse374.revengd.soot.SceneBuilder;
 import soot.*;
 import soot.javaToJimple.IInitialResolver;
+import soot.options.Options;
 import soot.util.Chain;
 
 public class MasterParser implements IParser{
+	Scene v;
+
+	public MasterParser(String path){
+		this.v = Scene.v();
+
+		Options options = Options.v();
+		options.set_no_bodies_for_excluded(true);
+		options.set_exclude(Arrays.asList("soot.*", "polygot.*"));
+		options.set_allow_phantom_refs(true);
+
+		v.setSootClassPath(v.defaultClassPath());
+		v.extendSootClassPath(path);
+	}
 
     @Override
-    public List<IUMLObject> parse(String path, String[] args) {
+    public List<IUMLObject> parse(String className, String[] args) {
     	List<IUMLObject> umlObjects;
 
-		SootClass clazz = Scene.v().loadClassAndSupport(path);
-
+    	SootClass clazz = v.loadClassAndSupport(className);
+		System.out.println(clazz.getName());
 		umlObjects = parseHelper(clazz);
 
         return umlObjects;
@@ -66,10 +80,9 @@ public class MasterParser implements IParser{
     
     public Scene setupScene(String path) {
     	Scene scene = SceneBuilder.create()
-				.addDirectory(path)												
-				.setEntryClass("path")
+				.addDirectory(path)
 				.addExclusions(Arrays.asList("soot.*", "polygot.*"))
-				.addExclusions(Arrays.asList("org.*", "com.*"))	
+				.addExclusions(Arrays.asList("org.*", "com.*"))
 				.build();	
     	return scene;
     }
