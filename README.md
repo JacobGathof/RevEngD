@@ -13,4 +13,15 @@ The project currently features 4 command line arguments:
 
 
 ## Team Contribution
-The project is configured to use Log4J, which you can also use for your own classes. See [SceneBuilder API](/src/main/java/csse374/revengd/soot/SceneBuilder.java) for an example. 
+All members contributed to the repo in commits, and were present during design decisions.
+
+Jack -  worked on the Filters, and command line parsing that was originally used. 
+        edited the IUMLObject and classes that implement it to include what is necessary for most filters.
+        Adjusted the UML diagram of our project to reflect our final design in milestone 1.
+        
+Jake -  worked on the IUMLObjects and original sourceParser. 
+        Set up the building and displaying of the UML diagrams
+        
+
+Trevor - Worked on MasterParser, main method, command line arguments.  Worked on original UML diagram and designed filters.  Created workaround to avoid using SceneBuilder so it isn't necessary
+
