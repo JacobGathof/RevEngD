@@ -1,0 +1,8 @@
+These are the notes for the Milestone one checkoff:
+
+
+Design is good most people did filters. 
+String points to object so that's right.
+Lab1-1 It doesn't do dependencies so we added all of the base classes and ran it recursively, that's fine.
+JComponent -r That's good.
+Our thing with private args are good. all pointing to object, looks funny. 
