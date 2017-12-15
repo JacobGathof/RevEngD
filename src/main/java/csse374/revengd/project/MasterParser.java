@@ -46,6 +46,7 @@ public class MasterParser implements IParser{
     		return umlObjects;
 		}
 
+		//TODO: Strategy Pattern
 		if(clazz.hasSuperclass()) {
 			dependencies.add(clazz.getSuperclass());
 			umlObjects.add(new ClassUMLObject(clazz.getSuperclass()));

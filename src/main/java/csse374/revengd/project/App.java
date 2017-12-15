@@ -10,7 +10,6 @@ import java.util.ArrayList;
 
 public class App {
     public static void main(String[] args){
-    	ArrayList<Class> classes = new ArrayList<>();
     	ArrayList<String> classNames = new ArrayList<>();
 
 		//Create and decorate parser with its filters
@@ -29,7 +28,6 @@ public class App {
 
 		Runner runner = new Runner(parser, builder, displayer, classNames);
 
-		//Runner runner = new Runner(parser, builder, displayer, p);
 		runner.run(args);
 		
 		
