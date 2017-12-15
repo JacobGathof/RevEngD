@@ -3,6 +3,8 @@
 
 ### Eclipse ###
 
+graphvis/
+
 .metadata
 bin/
 tmp/
