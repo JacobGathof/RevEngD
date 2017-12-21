@@ -1,0 +1,3 @@
+M2 Design Checkoff
+What does it actually show when you tell it to do a sequence diagram? It'll only really have a box and a line and arrows going to different lanes. You may have to create things that are friendly to sequence diagrams
+Chandan sent a tip to his class when he realized it wasn't going to do "List of" arrows very well 
