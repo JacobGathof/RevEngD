@@ -22,7 +22,8 @@ public class App {
 		defaultUMLStrategies.add(new InheritanceParserStrategy());
 		defaultUMLStrategies.add(new MethodParserStrategy());
 		defaultUMLStrategies.add(new SuperClassParserStrategy());
-		defaultUMLStrategies.add(new DependencyParserStrategy());
+		defaultUMLStrategies.add(new MethodSignatureDependencyParserStrategy());
+		defaultUMLStrategies.add(new AssociationParserStrategy());
 
 		IParser parser = new MasterParser(args[0], defaultUMLStrategies);
 		parser = new NonRecursiveParserFilter(parser);

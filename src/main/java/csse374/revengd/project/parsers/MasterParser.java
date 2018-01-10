@@ -20,6 +20,19 @@ public class MasterParser implements IParser{
 		this.v = Scene.v();
 
 		Options options = Options.v();
+		PhaseOptions po = PhaseOptions.v();
+
+		options.set_verbose(false);
+		options.set_keep_line_number(true);
+		options.set_src_prec(Options.src_prec_class);
+		options.set_prepend_classpath(true);
+
+		po.setPhaseOption("bb", "off");
+		po.setPhaseOption("tag.ln", "on");
+		po.setPhaseOption("jj.a", "on");
+		po.setPhaseOption("jj.ule", "on");
+
+		options.set_whole_program(true);
 		options.set_no_bodies_for_excluded(true);
 		options.set_exclude(Arrays.asList("soot.*", "polygot.*"));
 		options.set_allow_phantom_refs(true);
@@ -30,11 +43,9 @@ public class MasterParser implements IParser{
 
     @Override
     public List<IUMLObject> parse(String className, String[] args) {
-    	List<IUMLObject> umlObjects;
-
     	SootClass clazz = v.loadClassAndSupport(className);
     	//v.getClasses();
-		umlObjects = parseHelper(clazz);
+		List<IUMLObject> umlObjects = parseHelper(clazz);
 
         return umlObjects;
     }
@@ -52,7 +63,7 @@ public class MasterParser implements IParser{
 		}
 
 		for(SootClass c : dependencies){
-			if(!visited.contains(c)) {
+			if(!visited.contains(c) && !c.toString().contains("java")) {
 				visited.add(c);
 				umlObjects.addAll(parseHelper(c));
 			}

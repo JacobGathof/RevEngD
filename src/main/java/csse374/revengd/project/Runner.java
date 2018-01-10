@@ -27,13 +27,10 @@ public class Runner {
     public void run(String[] args){
         List<IUMLObject> objects = new ArrayList<>();
         for(String c : classes){
-            //File f = new File(c.getProtectionDomain().getCodeSource().getLocation().getPath());
             System.out.println("Parsing " + c);
             objects.addAll(parse(c, args));
         }
     	display(build(objects));
-    	
-        //display(build(parse(path)));
     }
 
     private List<IUMLObject> parse(String path, String[] args){

@@ -2,14 +2,12 @@ package csse374.revengd.project.umlobjects;
 
 import soot.SootClass;
 
-import java.awt.*;
-
-public class DependencyUMLObject implements IUMLObject{
+public class AssociationUMLObject implements IUMLObject {
     SootClass source;
     SootClass reference;
     boolean manyToOne;
 
-    public DependencyUMLObject(SootClass source, SootClass reference, boolean manyToOne){
+    public AssociationUMLObject(SootClass source, SootClass reference, boolean manyToOne){
         this.source = source;
         this.reference = reference;
         this.manyToOne = manyToOne;
