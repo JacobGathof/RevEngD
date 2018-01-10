@@ -14,6 +14,10 @@ import csse374.revengd.project.parsers.PrivacyParserFilter;
 
 public class App {
     public static void main(String[] args){
+    	
+    	Configuration config = new Configuration(args);
+    	config.printArguments();
+    	
     	ArrayList<String> classNames = new ArrayList<>();
 
 		//Create and decorate parser with its filters
