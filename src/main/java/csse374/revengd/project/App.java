@@ -1,12 +1,8 @@
 package csse374.revengd.project;
 
-
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 
+import csse374.revengd.project.parserstrategies.*;
 import csse374.revengd.project.builder.IBuilder;
 import csse374.revengd.project.builder.PlantUMLBuilder;
 import csse374.revengd.project.displayer.IDisplayer;
@@ -21,7 +17,14 @@ public class App {
     	ArrayList<String> classNames = new ArrayList<>();
 
 		//Create and decorate parser with its filters
-		IParser parser = new MasterParser(args[0]);
+		ArrayList<IParserStrategy> defaultUMLStrategies = new ArrayList<>();
+		defaultUMLStrategies.add(new InstanceVariableParserStrategy());
+		defaultUMLStrategies.add(new InheritanceParserStrategy());
+		defaultUMLStrategies.add(new MethodParserStrategy());
+		defaultUMLStrategies.add(new SuperClassParserStrategy());
+		defaultUMLStrategies.add(new DependencyParserStrategy());
+
+		IParser parser = new MasterParser(args[0], defaultUMLStrategies);
 		parser = new NonRecursiveParserFilter(parser);
 		parser = new PrivacyParserFilter(parser);
 

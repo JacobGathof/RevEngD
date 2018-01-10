@@ -5,19 +5,14 @@ apply plugin: 'idea'
 apply plugin: 'application'
 
 repositories {
-    maven {  
-    	url "https://maven.csse.rose-hulman.edu/artifactory/libs-release"
-    }
     maven {
-	    url "https://soot-build.cs.uni-paderborn.de/nexus/repository/soot-release"
-    }
-    maven {
-	    url "https://soot-build.cs.uni-paderborn.de/nexus/repository/soot-snapshot"
+        url "https://maven.csse.rose-hulman.edu/artifactory/libs-release"
     }
 }
 
 sourceCompatibility = 1.8
 version = "1.0.0-SNAPSHOT"
+
 eclipse {
     classpath {
         downloadJavadoc = true
@@ -26,10 +21,11 @@ eclipse {
 }
 
 dependencies {
-	compile 'ca.mcgill.sable:soot:3.+'
-	compile 'org.apache.logging.log4j:log4j-api:2.+'
-	compile 'org.apache.logging.log4j:log4j-core:2.+'
-	compile 'net.sourceforge.plantuml:plantuml:1.+' 
+    compile 'edu.rosehulman.jvm:SignatureEvaluator:1.0.+'
+    compile 'ca.mcgill.sable:soot:3.+'
+    compile 'org.apache.logging.log4j:log4j-api:2.+'
+    compile 'org.apache.logging.log4j:log4j-core:2.+'
+    compile 'net.sourceforge.plantuml:plantuml:1.+'
     testCompile 'junit:junit:4.+'
     testCompile "org.mockito:mockito-core:2.+"
 }
@@ -41,13 +37,13 @@ compileJava {
 mainClassName = "csse374.revengd.examples.driver.ExamplesDriver"
 applicationDefaultJvmArgs = ["-Xms512m", "-Xmx1024m"]
 run {
-	standardInput = System.in
+    standardInput = System.in
 }
 
 jar {
     manifest {
         attributes 'Implementation-Title': 'Rose-Hulman Reverse-Engineered Design Project',
-                   'Implementation-Version': '${version}'
+                'Implementation-Version': '${version}'
     }
 }
 
@@ -60,18 +56,18 @@ jacocoTestReport {
     group = "Reporting"
     description = "Generate Jacoco coverage reports after running tests."
     additionalSourceDirs = files(sourceSets.main.allJava.srcDirs)
-    
-	reports {
+
+    reports {
         xml.enabled true
         csv.enabled false
         html.enabled true
     }
-    
+
     afterEvaluate {
         classDirectories = files(classDirectories.files.collect {
             fileTree(dir: it, exclude: ['csse374/revengd/examples/**'])
         })
-    }    
+    }
 }
 
 test {
@@ -86,26 +82,26 @@ task codeCoverageInfo (dependsOn: jacocoTestReport) {
     ext.srcFile = file("${reportsDir}/jacoco/test/jacocoTestReport.xml")
     doLast {
         println "Transforming source file."
-		
-		def parser = new XmlParser()
-		parser.setFeature("http://apache.org/xml/features/disallow-doctype-decl", false); 
-		parser.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false); 
-		parser.setFeature("http://xml.org/sax/features/namespaces", false)
-		 		 
+
+        def parser = new XmlParser()
+        parser.setFeature("http://apache.org/xml/features/disallow-doctype-decl", false);
+        parser.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+        parser.setFeature("http://xml.org/sax/features/namespaces", false)
+
         def reportNode = parser.parse(srcFile)
         reportNode.children().each {
-        	if(it.name() == 'counter') {
-        		String type = it.@type
-        		float missed = it.@missed as float
-        		float covered = it.@covered as float
-        		float percentage = covered / (missed + covered) * 100
-        		println "Code Coverage[$type]: $percentage%"
-        	}        	
+            if(it.name() == 'counter') {
+                String type = it.@type
+                float missed = it.@missed as float
+                float covered = it.@covered as float
+                float percentage = covered / (missed + covered) * 100
+                println "Code Coverage[$type]: $percentage%"
+            }
         }
     }
 }
 jacocoTestReport.finalizedBy(codeCoverageInfo)
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '4.3.1'
+    gradleVersion = '4.3.1'
 }

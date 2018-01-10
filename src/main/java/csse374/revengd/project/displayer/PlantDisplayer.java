@@ -15,7 +15,6 @@ public class PlantDisplayer implements IDisplayer{
 
     	SourceStringReader reader = new SourceStringReader(UML);
 		try {
-			System.out.println(UML);
 			Path filePath = Paths.get("./", "build", "plantuml", "diagram.svg");
 			System.out.println(filePath);
 			Files.createDirectories(filePath.getParent());

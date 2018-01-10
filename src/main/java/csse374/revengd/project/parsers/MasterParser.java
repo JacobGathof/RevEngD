@@ -1,28 +1,22 @@
 package csse374.revengd.project.parsers;
 
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
-import csse374.revengd.project.umlobjects.ClassUMLObject;
+import csse374.revengd.project.parserstrategies.IParserStrategy;
 import csse374.revengd.project.umlobjects.IUMLObject;
-import csse374.revengd.project.umlobjects.InheritanceRelationUMLObject;
-import csse374.revengd.project.umlobjects.InstanceVariableUMLObject;
-import csse374.revengd.project.umlobjects.InterfaceUMLObject;
-import csse374.revengd.project.umlobjects.MethodUMLObject;
-import csse374.revengd.soot.MainMethodMatcher;
 import csse374.revengd.soot.SceneBuilder;
 import soot.*;
-import soot.javaToJimple.IInitialResolver;
 import soot.options.Options;
-import soot.util.Chain;
 
 public class MasterParser implements IParser{
 	Scene v;
+	List<IParserStrategy> strategies;
+	Set<SootClass> visited;
 
-	public MasterParser(String path){
+	public MasterParser(String path, List<IParserStrategy> strategies){
+		this.strategies = strategies;
+		this.visited = new HashSet<>();
+
 		this.v = Scene.v();
 
 		Options options = Options.v();
@@ -39,6 +33,7 @@ public class MasterParser implements IParser{
     	List<IUMLObject> umlObjects;
 
     	SootClass clazz = v.loadClassAndSupport(className);
+    	//v.getClasses();
 		umlObjects = parseHelper(clazz);
 
         return umlObjects;
@@ -52,44 +47,17 @@ public class MasterParser implements IParser{
     		return umlObjects;
 		}
 
-		//TODO: Strategy Pattern
-		if(clazz.hasSuperclass()) {
-			dependencies.add(clazz.getSuperclass());
-			umlObjects.add(new ClassUMLObject(clazz.getSuperclass()));
-			umlObjects.add(new InheritanceRelationUMLObject(clazz, clazz.getSuperclass()));
+		for(IParserStrategy strategy : strategies){
+    		umlObjects.addAll(strategy.parse(clazz, dependencies, v));
 		}
 
-		clazz.getInterfaces().forEach(i ->{
-			IUMLObject inter = new InterfaceUMLObject(i);
-			IUMLObject obj = new InheritanceRelationUMLObject(clazz, i);
-			umlObjects.add(obj);
-			umlObjects.add(inter);
-			dependencies.add(i);
-		});
-
-		clazz.getMethods().forEach(m->{
-			IUMLObject obj = new MethodUMLObject(clazz, m);
-			umlObjects.add(obj);
-		});
-
-		clazz.getFields().forEach(f->{
-			IUMLObject obj = new InstanceVariableUMLObject(clazz, f);
-			umlObjects.add(obj);
-		});
-
 		for(SootClass c : dependencies){
-			umlObjects.addAll(parseHelper(c));
+			if(!visited.contains(c)) {
+				visited.add(c);
+				umlObjects.addAll(parseHelper(c));
+			}
 		}
 
 		return umlObjects;
 	}
-    
-    public Scene setupScene(String path) {
-    	Scene scene = SceneBuilder.create()
-				.addDirectory(path)
-				.addExclusions(Arrays.asList("soot.*", "polygot.*"))
-				.addExclusions(Arrays.asList("org.*", "com.*"))
-				.build();	
-    	return scene;
-    }
 }
