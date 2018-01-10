@@ -9,6 +9,16 @@ public class Configuration {
 	private Options options;
 	private CommandLine cmd;
 	private String path;
+	private ArrayList<ArgumentParameters> arguments;
+	
+	/*
+	 * Does not currently do anything, as the constructor immediately calls loadArguments();
+	 */
+	public void addParameters(String shortName, String longName, 
+			boolean hasOptionalArgs, String description, boolean required) {
+		arguments.add(new ArgumentParameters(shortName, longName, hasOptionalArgs, description, required));
+	}
+	
 	
 	public Configuration(String[] args) {
 		
@@ -18,8 +28,7 @@ public class Configuration {
 			newArgs[i] = args[i+1];
 		}
 		
-		ArrayList<ArgumentParameters> arguments = 
-				(ArrayList<ArgumentParameters>) Lists.newArrayList(
+		arguments = (ArrayList<ArgumentParameters>) Lists.newArrayList(
 				
 			//ShortName	/ LongName / HasOptionalArgs / Description / Required 
 			new ArgumentParameters("r", 	"recursive", 	true, 	"recursive depth", 		false),
@@ -32,8 +41,8 @@ public class Configuration {
 		);
 		
 		options = new Options();
-		
 		loadArguments(arguments, newArgs);
+		
 	}
 	
 	private void loadArguments(ArrayList<ArgumentParameters> argumentList, String[] args) {
