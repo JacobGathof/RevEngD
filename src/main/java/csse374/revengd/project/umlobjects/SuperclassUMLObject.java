@@ -18,8 +18,13 @@ public class SuperclassUMLObject implements IUMLObject {
 	}
 	
     @Override
-    public String toUML() {
-        return source.getName() + " <|-- " + target.getName();
+    public String toUML(boolean full) {
+        if(full) {
+			return source.getName() + " <|-- " + target.getName();
+		}
+		else{
+			return source.getShortName() + " <|-- " + target.getShortName();
+		}
     }
 
 	@Override

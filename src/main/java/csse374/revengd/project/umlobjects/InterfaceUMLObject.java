@@ -14,8 +14,13 @@ public class InterfaceUMLObject implements IUMLObject{
     }
 
     @Override
-    public String toUML() {
-        return "interface " + inter.getName();
+    public String toUML(boolean full) {
+        if(full) {
+			return "interface " + inter.getName();
+		}
+		else{
+			return "interface " + inter.getShortName();
+		}
     }
 
 	@Override

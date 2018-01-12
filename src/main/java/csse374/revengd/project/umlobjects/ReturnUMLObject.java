@@ -2,6 +2,7 @@ package csse374.revengd.project.umlobjects;
 
 import java.util.List;
 
+import com.beust.jcommander.internal.Lists;
 import soot.SootClass;
 import soot.SootMethod;
 
@@ -16,7 +17,7 @@ public class ReturnUMLObject implements IUMLObject {
 	}
 	
     @Override
-    public String toUML() {
+    public String toUML(boolean full) {
     	//return target.getDeclaringClass().getJavaStyleName() + " --> " + source.getJavaStyleName();
         //return source.getName().replace('$', '_') + " <-- " + target.getDeclaringClass().getName().replace('$', '_');
     	StringBuilder builder = new StringBuilder();
@@ -44,8 +45,8 @@ public class ReturnUMLObject implements IUMLObject {
 
 	@Override
 	public List<String> getPackage() {
-		// TODO Auto-generated method stub
-		return null;
+		return (List<String>) Lists.newArrayList(source.getName().split("\\.")[0], target.getDeclaringClass().getName().split("\\.")[0]);
 	}
+
 
 }

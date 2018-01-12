@@ -25,7 +25,7 @@ public class App {
 			defaultUMLStrategies.add(new SequenceDiagramParserStrategy("main", 5));
 		}
 		else{
-			builder = new PlantUMLBuilder();
+			builder = new PlantUMLBuilder(true);
 			if (config.hasArg("basic")) {
 				defaultUMLStrategies.add(new InstanceVariableParserStrategy());
 				defaultUMLStrategies.add(new InheritanceParserStrategy());
@@ -56,6 +56,7 @@ public class App {
 		}
 
 		if(config.hasArg("pa")) {
+			//builder = new PlantUMLBuilder(false);
 			parser = new PackageParserFilter(parser);
 		}
 

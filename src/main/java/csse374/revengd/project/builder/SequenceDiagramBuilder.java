@@ -18,7 +18,7 @@ public class SequenceDiagramBuilder implements IBuilder {
         StringBuilder builder = new StringBuilder();
         builder.append("@startuml\n");
         for (int i = objects.size()-1; i >= 0; i--){
-        	builder.append(objects.get(i).toUML() + "\n");
+        	builder.append(objects.get(i).toUML(true) + "\n");
         }
         /*for(IUMLObject s : objects) {
         	builder.append(s.toUML() + "\n");
