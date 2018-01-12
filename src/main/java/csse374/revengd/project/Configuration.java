@@ -28,6 +28,10 @@ public class Configuration {
 		addParameters("pr", "private", 		"private scope", 		false, 	false, 1, 	null);	
 		addParameters("po", "protected",	"protected scope", 		false, 	false, 1, 	null);	
 		addParameters("sd", "sequence", 	"sequence diagram",		false, 	false, 1, 	null);	
+		addParameters("d",  "dependency", 	"show dependencies",	false, 	false, 1, 	null);	
+		addParameters("b",  "basic", 		"basic parsers",		false, 	false, 1, 	null);
+		addParameters("e",  "expand", 		"don't expand JDK",		false, 	false, 1, 	null);
+		
 		//ShortName	/ LongName / Description /  Required? / optional args? / Allowed Argument #
 		
 		loadArguments(args);

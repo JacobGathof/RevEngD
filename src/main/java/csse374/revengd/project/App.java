@@ -17,6 +17,7 @@ public class App {
     	
     	Configuration config = new Configuration(args);
     	config.printArguments();
+    	System.out.println(config.getValue("recursive"));
 
 		//Create and decorate parser with its filters
 		ArrayList<IParserStrategy> defaultUMLStrategies = new ArrayList<>();
