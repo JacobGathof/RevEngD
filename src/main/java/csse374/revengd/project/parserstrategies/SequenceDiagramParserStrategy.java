@@ -92,6 +92,7 @@ public class SequenceDiagramParserStrategy implements IParserStrategy {
 			while(stmtIt.hasNext()){
 				Unit stmt = stmtIt.next();
 				//System.out.println("Unit: " + stmt.toString());
+				Iterator<Edge> tempasdf = g.edgesOutOf(stmt);
 				
 				if(stmt instanceof AssignStmt){
 					//if(stmt instanceof AssignStmt) {
@@ -127,10 +128,10 @@ public class SequenceDiagramParserStrategy implements IParserStrategy {
 					while(children!= null && children.hasNext()){
 						SootMethod aChild = (SootMethod) children.next();
 						
-						if (!aChild.hasActiveBody()){
+						//if (!aChild.hasActiveBody()){
 							//void performCHAPointerAnalysis(Scene scene, SootMethod method) {
 								  //System.out.println("Performing CHA analysis for " + method.getName() + "() ...");
-								  Hierarchy hierarchy = v.getActiveHierarchy();
+								  /*Hierarchy hierarchy = v.getActiveHierarchy();
 								  List<SootMethod> possibleMethods = hierarchy.resolveAbstractDispatch(method.getDeclaringClass(), method);
 								  int i = 0;
 								  for(i = 0; i < possibleMethods.size(); i++){
@@ -138,13 +139,13 @@ public class SequenceDiagramParserStrategy implements IParserStrategy {
 										  aChild = possibleMethods.get(i);
 										  break;
 									  }
-								  }
+								  }*/
 								  
 								  
 								  //examinationList.add(possibleMethods.iterator().next());
 								 // this.prettyPrintMethods("CHA resolution for", method, possibleMethods);
 	
-						}
+						//}
 						//System.out.println("root: " + rootMethod.getName());
 						//System.out.println("aChild: " + aChild.getName());
 						
@@ -158,6 +159,18 @@ public class SequenceDiagramParserStrategy implements IParserStrategy {
 				}
 			}
 		//}
+		else {
+			Hierarchy hierarchy = v.getActiveHierarchy();
+			  List<SootMethod> possibleMethods = hierarchy.resolveAbstractDispatch(rootMethod.getDeclaringClass(), rootMethod);
+			  int i = 0;
+			  for(i = 0; i < possibleMethods.size(); i++){
+				  if (possibleMethods.get(i).hasActiveBody()){
+					  //aChild = possibleMethods.get(i);
+					  examine(g, possibleMethods.get(i), callingClass, remainingDepth, v/*, Iterator<Unit> stmtIt*/);
+					  break;
+				  }
+			  }
+		}
 		return examinationList;
 	}
 }
