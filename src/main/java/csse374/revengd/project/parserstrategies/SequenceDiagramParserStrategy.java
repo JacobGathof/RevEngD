@@ -18,10 +18,12 @@ import soot.SootClass;
 import soot.SootMethod;
 import soot.Unit;
 import soot.Value;
+import soot.baf.internal.BNewInst;
 import soot.baf.internal.BSpecialInvokeInst;
 import soot.baf.internal.BStaticInvokeInst;
 import soot.jimple.AssignStmt;
 import soot.jimple.InvokeExpr;
+import soot.jimple.InvokeStmt;
 import soot.jimple.NewExpr;
 import soot.jimple.toolkits.callgraph.CallGraph;
 import soot.jimple.toolkits.callgraph.ContextSensitiveCallGraph;
@@ -120,7 +122,23 @@ public class SequenceDiagramParserStrategy implements IParserStrategy {
 					System.out.println("BStaticInvokeInst");
 					children = new Targets(g.edgesOutOf(((BStaticInvokeInst) stmt).getMethod()));
 				}
+				if(stmt instanceof InvokeStmt){
+		            InvokeExpr IE = ((InvokeStmt)stmt).getInvokeExpr();
+		            SootMethod aMethod = IE.getMethod();
+		            children = new Targets(g.edgesOutOf(aMethod));
+		        }
+		        /*else if(stmt instanceof AssignStmt){
+		            AssignStmt AS = (AssignStmt)stmt;
+		            
+		        }
+
+		        else if(stmt instanceof BNewInst){
+		            BNewInst NS = (BNewInst)stmt;
+		            NS.get
+		            dependecies.add(NS.getOpType().toString());
+		        }*/
 			
+					
 				
 				
 				//if (method!= null){
