@@ -25,9 +25,12 @@ public class JDKParserFilter implements IParserFilter{
 			IUMLObject obj = sootObjects.get(i);
 			String[] exclusions = new String[] {"java", "javax", "sun", "lang"};
 			boolean samePack = true;
-			for(String s : exclusions) {
-				if(obj.toUML(true).contains(s)){
-					samePack = false;
+			List<String> packages = obj.getPackage();
+			for(String s : packages) {
+				for(String ss : exclusions) {
+					if(s.equals(ss)) {
+						samePack = false;
+					}
 				}
 			}
 			if(!samePack) {
