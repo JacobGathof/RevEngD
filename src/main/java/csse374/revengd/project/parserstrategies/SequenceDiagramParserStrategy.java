@@ -71,6 +71,7 @@ public class SequenceDiagramParserStrategy implements IParserStrategy {
 	private List<IUMLObject> examine(CallGraph g, SootMethod rootMethod, SootClass callingClass, int remainingDepth/*, Iterator<Unit> stmtIt*/){
 		List<IUMLObject> examinationList = new ArrayList<IUMLObject>();
 		System.out.println("Inside examine");
+		Iterator<MethodOrMethodContext> children = null;
 		//System.out.println(method.getName());
 		if (rootMethod.hasActiveBody()){
 			//System.out.println("Method has active body");
@@ -95,16 +96,29 @@ public class SequenceDiagramParserStrategy implements IParserStrategy {
 					//if(stmt instanceof AssignStmt) {
 					Value rightOp = ((AssignStmt) stmt).getRightOp();
 					if (rightOp instanceof InvokeExpr){
+						System.out.println("in assignment statement");
 						InvokeExpr temp = (InvokeExpr) rightOp;
 						method = temp.getMethod();
+						children = new Targets (g.edgesOutOf(rootMethod));//g.edgesOutOf(method);
 						//method = temp.getMethod();
 						//edges = g.edgesOutOf(targetMethod);
 					}
 				}
+				if (stmt instanceof BSpecialInvokeInst)
+				{
+					
+				
+					//System.out.println("BSpecialInvokeInst");
+					method = ((BSpecialInvokeInst) stmt).getMethod();
+				
+					//Iterator<Edge>
+					children = new Targets(g.edgesOutOf(rootMethod));
+				}
+			
 				
 				
 				//if (method!= null){
-					Iterator<MethodOrMethodContext> children = new Targets (g.edgesOutOf(rootMethod));
+					//Iterator<MethodOrMethodContext> children = new Targets (g.edgesOutOf(rootMethod));
 					while(children!= null && children.hasNext()){
 						SootMethod aChild = (SootMethod) children.next();
 						
@@ -117,6 +131,9 @@ public class SequenceDiagramParserStrategy implements IParserStrategy {
 								 // this.prettyPrintMethods("CHA resolution for", method, possibleMethods);
 	
 						}*/
+						System.out.println("root: " + rootMethod.getName());
+						System.out.println("aChild: " + aChild.getName());
+						
 						examinationList.add(new ReturnUMLObject(callingClass, aChild));
 						
 						examinationList.addAll(examine(g, aChild, aChild.getDeclaringClass(), remainingDepth - 1));
