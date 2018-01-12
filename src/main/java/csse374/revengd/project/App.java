@@ -20,13 +20,17 @@ public class App {
 
 		//Create and decorate parser with its filters
 		ArrayList<IParserStrategy> defaultUMLStrategies = new ArrayList<>();
-		defaultUMLStrategies.add(new InstanceVariableParserStrategy());
-		defaultUMLStrategies.add(new InheritanceParserStrategy());
-		defaultUMLStrategies.add(new MethodParserStrategy());
-		defaultUMLStrategies.add(new SuperClassParserStrategy());
-		defaultUMLStrategies.add(new MethodSignatureDependencyParserStrategy());
-		defaultUMLStrategies.add(new AssociationParserStrategy());
-		defaultUMLStrategies.add(new LocalVariableDependencyParserStrategy());
+		if(config.hasArg("basic")) {
+			defaultUMLStrategies.add(new InstanceVariableParserStrategy());
+			defaultUMLStrategies.add(new InheritanceParserStrategy());
+			defaultUMLStrategies.add(new MethodParserStrategy());
+			defaultUMLStrategies.add(new SuperClassParserStrategy());
+		}
+		if(config.hasArg("dependency")) {
+			defaultUMLStrategies.add(new MethodSignatureDependencyParserStrategy());
+			defaultUMLStrategies.add(new AssociationParserStrategy());
+			defaultUMLStrategies.add(new LocalVariableDependencyParserStrategy());
+		}
 
 		IParser parser = new MasterParser(config, defaultUMLStrategies);
 		parser = new NonRecursiveParserFilter(parser);
