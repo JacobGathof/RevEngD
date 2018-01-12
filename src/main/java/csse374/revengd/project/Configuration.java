@@ -1,58 +1,39 @@
 package csse374.revengd.project;
 
-import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.cli.*;
-import com.beust.jcommander.internal.Lists;
 
 public class Configuration {
 	
 	private Options options;
 	private CommandLine cmd;
-	private String path;
-	private ArrayList<ArgumentParameters> arguments;
 	
-	/*
-	 * Does not currently do anything, as the constructor immediately calls loadArguments();
-	 */
-	public void addParameters(String shortName, String longName, 
-			boolean hasOptionalArgs, String description, boolean required) {
-		arguments.add(new ArgumentParameters(shortName, longName, hasOptionalArgs, description, required));
+	
+	public void addParameters(String shortName, String longName, String description,
+			 boolean required, boolean hasOptionalArgs, int numValues, String defaultValue) {
+		
+		JJOption option = new JJOption(shortName, longName, description, hasOptionalArgs, numValues, required, defaultValue);
+		options.addOption(option);
 	}
-	
 	
 	public Configuration(String[] args) {
 		
-		path = args[0];
-		String[] newArgs = new String[args.length-1];
-		for(int i = 0; i < newArgs.length; i++) {
-			newArgs[i] = args[i+1];
-		}
-		
-		arguments = (ArrayList<ArgumentParameters>) Lists.newArrayList(
-				
-			//ShortName	/ LongName / HasOptionalArgs / Description / Required 
-			new ArgumentParameters("r", 	"recursive", 	true, 	"recursive depth", 		false),
-			new ArgumentParameters("pu", 	"public", 		false, 	"public scope", 		false),
-			new ArgumentParameters("pr", 	"private", 		false, 	"private scope", 		false),	
-			new ArgumentParameters("po", 	"protected", 	false, 	"protected scope", 		false),	
-			new ArgumentParameters("sd", 	"sequence", 	false, 	"sequence diagram",		false), 
-			new ArgumentParameters("e", 	"expand", 		false, 	"expand",				false)	
-			
-		);
-		
 		options = new Options();
-		loadArguments(arguments, newArgs);
 		
+		addParameters("c",  "classes", 		"classes to analyze", 	true, 	true, -2, 	null);	
+		addParameters("p",  "path", 		"path",					true, 	true,  1,	"");	
+		addParameters("r",  "recursive",	"recursive depth", 		false, 	true,  1,	"5");	
+		addParameters("pu", "public", 		"public scope", 		false, 	false, 1, 	null);	
+		addParameters("pr", "private", 		"private scope", 		false, 	false, 1, 	null);	
+		addParameters("po", "protected",	"protected scope", 		false, 	false, 1, 	null);	
+		addParameters("sd", "sequence", 	"sequence diagram",		false, 	false, 1, 	null);	
+		//ShortName	/ LongName / Description /  Required? / optional args? / Allowed Argument #
+		
+		loadArguments(args);
 	}
 	
-	private void loadArguments(ArrayList<ArgumentParameters> argumentList, String[] args) {
-		
-		for(ArgumentParameters ap : argumentList) {
-			Option option = new Option(ap.shortName, ap.longName, ap.hasArg, ap.desc);
-			option.setOptionalArg(ap.hasArg);
-			option.setRequired(ap.required);
-			options.addOption(option);
-		}
+	private void loadArguments(String[] args) {
 		
 		CommandLineParser parser = new DefaultParser();
 	    HelpFormatter formatter = new HelpFormatter();
@@ -68,42 +49,58 @@ public class Configuration {
 	
 	public void printArguments() {
 		
-		System.out.println("Path: " + path);
 		System.out.println("=== Arguments ===");
 		for(Option o : cmd.getOptions()) {
-			System.out.println(o.toString());
-		}
-		System.out.println("=== Additional Arguments ===");
-		for(String s : cmd.getArgs()) {
-			System.out.println(s);
+			System.out.println(o.getOpt() + " " + (o.getValuesList() == null ? "" : o.getValuesList().toString()));
 		}
 		System.out.println("=====");
 	}
 
 	public String getValue(String s) {
-		return cmd.getOptionValue(s);
+		String ss = cmd.getOptionValue(s);
+		return ss;
 	}
 	
+	public boolean hasArg(String s) {
+		return cmd.hasOption(s);
+	}
+	
+	
+	/*
+	 * Convenience more than anything. You don't need to know the argument name to get the classes or path
+	 */
 	public String[] getClasses() {
-		return cmd.getArgs();
+		return cmd.getOptionValues("c");
 	}
 	public String getPath() {
-		return path;
+		return cmd.getOptionValue("p");
 	}
 	
-	class ArgumentParameters {		
-		public final String shortName;
-		public final String longName;
-		public final boolean hasArg;
-		public final String desc;
-		public final boolean required;
+	
+	private class JJOption extends Option{
 		
-		public ArgumentParameters(String sn, String ln, boolean ha, String d, boolean r) {
-			shortName = sn;
-			longName = ln;
-			hasArg = ha;
-			desc = d;
-			required = r;
+		private final String defaultValue;
+		
+		public JJOption(String opt, String longOpt, String description, 
+						boolean hasArg, int numberOfArgs, boolean required, String defaultValue) throws IllegalArgumentException {
+			super(opt, longOpt, hasArg, description);
+			
+			setOptionalArg(hasArg);
+			if(hasArg) {
+				setArgs(numberOfArgs);
+			}
+			setRequired(required);
+			
+			this.defaultValue = defaultValue;
+		}
+		
+		@Override
+		public List<String> getValuesList(){
+			List<String> ls = super.getValuesList();
+			if(ls.isEmpty()) {
+				ls.add(defaultValue);
+			}
+			return ls;
 		}
 	}
 	

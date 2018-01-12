@@ -17,8 +17,6 @@ public class App {
     	
     	Configuration config = new Configuration(args);
     	config.printArguments();
-    	
-    	ArrayList<String> classNames = new ArrayList<>();
 
 		//Create and decorate parser with its filters
 		ArrayList<IParserStrategy> defaultUMLStrategies = new ArrayList<>();
@@ -30,20 +28,14 @@ public class App {
 		defaultUMLStrategies.add(new AssociationParserStrategy());
 		defaultUMLStrategies.add(new LocalVariableDependencyParserStrategy());
 
-		IParser parser = new MasterParser(args[0], defaultUMLStrategies);
+		IParser parser = new MasterParser(config, defaultUMLStrategies);
 		parser = new NonRecursiveParserFilter(parser);
 		parser = new PrivacyParserFilter(parser);
 
 		IBuilder builder = new PlantUMLBuilder();
 		IDisplayer displayer = new PlantDisplayer();
 
-		for(String arg : args){
-			if(!arg.startsWith("-") && arg != args[0]){
-				classNames.add(arg);
-			}
-		}
-
-		Runner runner = new Runner(parser, builder, displayer, classNames);
+		Runner runner = new Runner(parser, builder, displayer, config);
 
 		runner.run(args);
 		

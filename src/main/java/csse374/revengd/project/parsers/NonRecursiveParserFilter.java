@@ -3,6 +3,7 @@ package csse374.revengd.project.parsers;
 import java.util.Arrays;
 import java.util.List;
 
+import csse374.revengd.project.Configuration;
 import csse374.revengd.project.umlobjects.IUMLObject;
 
 public class NonRecursiveParserFilter implements IParserFilter{
@@ -17,15 +18,15 @@ public class NonRecursiveParserFilter implements IParserFilter{
         return objects;
     }
 
-    public List<IUMLObject> parse(String path, String[] args) {
-    	List<IUMLObject> sootObjects = parser.parse(path, args);
+    public List<IUMLObject> parse(String path, Configuration config) {
+    	List<IUMLObject> sootObjects = parser.parse(path, config);
     	
-    	if(Arrays.asList(args).contains("-r")){
-    		return sootObjects;
-    	} else {
+    	if(config.hasArg("r")) {
+			return sootObjects;
+		} else {
     		for(int i = 0; i < sootObjects.size(); i++) {
     			IUMLObject obj = sootObjects.get(i);
-    			if(!Arrays.asList(args).contains(obj.getSootClass().getName())) {
+    			if(!Arrays.asList(config.getClasses()).contains(obj.getSootClass().getName())) {
     				sootObjects.remove(obj);
     				i--;
     			}
