@@ -18,12 +18,19 @@ public class AssociationUMLObject implements IUMLObject {
     }
 
     @Override
-    public String toUML() {
-        if(manyToOne) {
-            return source.toString() + " --* \"1..*\" " + cleanName(reference.toString());
+    public String toUML(boolean full) {
+        if(full){
+            if (manyToOne) {
+                return source.toString() + " --* \"1..*\" " + cleanName(reference.toString());
+            }
+            return source.toString() + " --* " + cleanName(reference.toString());
         }
-        return source.toString() + " --* " + cleanName(reference.toString());
-
+        else{
+            if (manyToOne) {
+                return source.getShortName() + " --* \"1..*\" " + cleanName(reference.getShortName());
+            }
+            return source.getShortName() + " --* " + cleanName(reference.getShortName());
+        }
     }
 
     private String cleanName(String className){

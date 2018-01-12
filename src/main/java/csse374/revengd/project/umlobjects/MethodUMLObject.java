@@ -18,8 +18,13 @@ public class MethodUMLObject implements IUMLObject{
 	}
 	
     @Override
-    public String toUML() {
-        return source.getName() + " : " + target.getDeclaration();
+    public String toUML(boolean full) {
+        if(full) {
+			return source.getName() + " : " + target.getDeclaration();
+		}
+		else{
+			return source.getShortName() + " : " + target.getDeclaration();
+		}
     }
 
 	@Override

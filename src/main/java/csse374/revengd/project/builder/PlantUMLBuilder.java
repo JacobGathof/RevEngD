@@ -5,14 +5,21 @@ import java.util.HashSet;
 import java.util.List;
 
 import csse374.revengd.project.umlobjects.IUMLObject;
+import net.sourceforge.plantuml.graph2.Plan;
 
 public class PlantUMLBuilder implements IBuilder {
+    boolean full;
+
+    public PlantUMLBuilder(boolean full){
+        this.full = full;
+    }
+
     @Override
     public String build(List<IUMLObject> objects) {
     	
         HashSet<String> objSet = new HashSet<String>();
         for(IUMLObject obj : objects) {
-            objSet.add(obj.toUML());
+            objSet.add(obj.toUML(full));
         }
         HashSet<String> newObjSet = (HashSet<String>)objSet.clone();
         for(String obj : objSet){

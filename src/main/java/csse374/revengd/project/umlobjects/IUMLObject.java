@@ -5,7 +5,7 @@ import java.util.List;
 import soot.SootClass;
 
 public interface IUMLObject {
-    String toUML();
+    String toUML(boolean full);
     public int getModifiers();
     public SootClass getSootClass();
     public List<String> getPackage();

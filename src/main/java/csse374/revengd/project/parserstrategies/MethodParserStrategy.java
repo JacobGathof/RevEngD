@@ -13,8 +13,10 @@ public class MethodParserStrategy implements IParserStrategy {
     public List<IUMLObject> parse(SootClass clazz, List<SootClass> dependencies, Scene v) {
         List<IUMLObject> umlObjects = new ArrayList<>();
         clazz.getMethods().forEach(m->{
-            IUMLObject obj = new MethodUMLObject(clazz, m);
-            umlObjects.add(obj);
+            if(!m.toString().contains("<init>")){
+                IUMLObject obj = new MethodUMLObject(clazz, m);
+                umlObjects.add(obj);
+            }
         });
         return umlObjects;
     }

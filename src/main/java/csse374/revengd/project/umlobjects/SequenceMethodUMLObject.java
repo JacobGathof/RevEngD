@@ -16,7 +16,7 @@ public class SequenceMethodUMLObject implements IUMLObject {
 	}
 	
     @Override
-    public String toUML() {
+    public String toUML(boolean full) {
     	StringBuilder builder = new StringBuilder();
     	for(int i = 0; i < target.getParameterCount(); i++){
     		builder.append(target.getParameterType(i));

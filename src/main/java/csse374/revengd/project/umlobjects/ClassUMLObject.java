@@ -16,8 +16,13 @@ public class ClassUMLObject implements IUMLObject{
 	}
 	
     @Override
-    public String toUML() {
-        return "class " + clazz.getName();
+    public String toUML(boolean full) {
+        if(full) {
+			return "class " + clazz.getName();
+		}
+		else{
+        	return "class " + clazz.getShortName();
+		}
     }
 
 	@Override

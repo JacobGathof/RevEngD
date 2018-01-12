@@ -16,7 +16,7 @@ public class ReturnUMLObject implements IUMLObject {
 	}
 	
     @Override
-    public String toUML() {
+    public String toUML(boolean full) {
     	//return target.getDeclaringClass().getJavaStyleName() + " --> " + source.getJavaStyleName();
         //return source.getName().replace('$', '_') + " <-- " + target.getDeclaringClass().getName().replace('$', '_');
     	StringBuilder builder = new StringBuilder();
