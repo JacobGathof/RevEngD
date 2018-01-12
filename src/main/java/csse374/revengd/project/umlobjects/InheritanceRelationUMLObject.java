@@ -1,5 +1,11 @@
 package csse374.revengd.project.umlobjects;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import com.beust.jcommander.internal.Lists;
+
 import soot.SootClass;
 
 public class InheritanceRelationUMLObject implements IUMLObject {
@@ -31,4 +37,11 @@ public class InheritanceRelationUMLObject implements IUMLObject {
 	public SootClass getSootClass() {
 		return child;
 	}
+	
+	@Override
+	public List<String> getPackage() {
+		return (List<String>) Lists.newArrayList(child.getName().split("\\.")[0], child.getName().split("\\.")[1]);
+	}
+	
+	
 }

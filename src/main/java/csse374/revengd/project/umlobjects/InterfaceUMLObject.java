@@ -1,5 +1,9 @@
 package csse374.revengd.project.umlobjects;
 
+import java.util.List;
+
+import com.beust.jcommander.internal.Lists;
+
 import soot.SootClass;
 
 public class InterfaceUMLObject implements IUMLObject{
@@ -22,5 +26,10 @@ public class InterfaceUMLObject implements IUMLObject{
 	@Override
 	public SootClass getSootClass() {
 		return inter;
+	}
+	
+	@Override
+	public List<String> getPackage() {
+		return (List<String>) Lists.newArrayList(inter.getName().split("\\.")[0]);
 	}
 }

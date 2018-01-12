@@ -3,6 +3,9 @@ package csse374.revengd.project.umlobjects;
 import soot.SootClass;
 
 import java.awt.*;
+import java.util.List;
+
+import com.beust.jcommander.internal.Lists;
 
 public class DependencyUMLObject implements IUMLObject{
     SootClass source;
@@ -38,4 +41,9 @@ public class DependencyUMLObject implements IUMLObject{
     public SootClass getSootClass() {
         return source;
     }
+    
+    @Override
+	public List<String> getPackage() {
+		return (List<String>) Lists.newArrayList(source.getName().split("\\.")[0], reference.getName().split("\\.")[1]);
+	}
 }

@@ -8,4 +8,6 @@ public interface IUMLObject {
     String toUML();
     public int getModifiers();
     public SootClass getSootClass();
+    public List<String> getPackage();
+    
 }

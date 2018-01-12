@@ -26,8 +26,15 @@ public class PackageParserFilter implements IParserFilter{
 		} else {
     		for(int i = 0; i < sootObjects.size(); i++) {
     			IUMLObject obj = sootObjects.get(i);
-    			String pack = path.split("\\.")[0];
-    			if(!obj.getSootClass().getName().split("\\.")[0].equals(pack)) {
+    			String pack = path.split(".")[0];
+    			boolean samePack = true;
+    			List<String> packages = obj.getPackage();
+    			for(String s : packages) {
+    				if(!s.equals(pack)) {
+    					samePack = false;
+    				}
+    			}
+    			if(!samePack) {
     				sootObjects.remove(obj);
     				i--;
     			}

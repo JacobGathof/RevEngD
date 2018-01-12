@@ -1,5 +1,9 @@
 package csse374.revengd.project.umlobjects;
 
+import java.util.List;
+
+import com.beust.jcommander.internal.Lists;
+
 import soot.SootClass;
 
 public class AssociationUMLObject implements IUMLObject {
@@ -38,4 +42,9 @@ public class AssociationUMLObject implements IUMLObject {
     public SootClass getSootClass() {
         return source;
     }
+    
+    @Override
+	public List<String> getPackage() {
+		return (List<String>) Lists.newArrayList(source.getName().split("\\.")[0], reference.getName().split("\\.")[1]);
+	}
 }
