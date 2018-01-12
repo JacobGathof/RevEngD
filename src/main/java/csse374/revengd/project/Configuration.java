@@ -1,111 +1,205 @@
 package csse374.revengd.project;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.cli.*;
 
 public class Configuration {
 	
-	private Options options;
-	private CommandLine cmd;
-	
+	private List<Option> options;
 	
 	public void addParameters(String shortName, String longName, String description,
-			 boolean required, boolean hasOptionalArgs, int numValues, String defaultValue) {
+			 boolean required, String defaultValue) {
 		
-		JJOption option = new JJOption(shortName, longName, description, hasOptionalArgs, numValues, required, defaultValue);
-		options.addOption(option);
+		Option option = new Option(shortName, longName, description, required, defaultValue);
+		options.add(option);
 	}
 	
 	public Configuration(String[] args) {
 		
-		options = new Options();
+		options = new ArrayList<Option>();
 		
-		addParameters("c",  "classes", 		"classes to analyze", 	true, 	true, -2, 	null);	
-		addParameters("p",  "path", 		"path",					true, 	true,  1,	"");	
-		addParameters("r",  "recursive",	"recursive depth", 		false, 	true,  1,	"5");	
-		addParameters("pu", "public", 		"public scope", 		false, 	false, 1, 	null);	
-		addParameters("pr", "private", 		"private scope", 		false, 	false, 1, 	null);	
-		addParameters("po", "protected",	"protected scope", 		false, 	false, 1, 	null);	
-		addParameters("sd", "sequence", 	"sequence diagram",		false, 	false, 1, 	null);	
-		addParameters("d",  "dependency", 	"show dependencies",	false, 	false, 1, 	null);	
-		addParameters("b",  "basic", 		"basic parsers",		false, 	false, 1, 	null);
-		addParameters("e",  "expand", 		"don't expand JDK",		false, 	false, 1, 	null);
-		addParameters("pa",  "package", 		"don't expand outside of package",		false, 	false, 1, 	null);
+		addParameters("c",  "classes", 		"classes to analyze", 	true,	null);	
+		addParameters("p",  "path", 		"path",					true, 	"");	
+		addParameters("r",  "recursive",	"recursive depth", 		false, 	"5");	
+		addParameters("pu", "public", 		"public scope", 		false, 	null);	
+		addParameters("pr", "private", 		"private scope", 		false, 	null);	
+		addParameters("po", "protected",	"protected scope", 		false, 	null);	
+		addParameters("sd", "sequence", 	"sequence diagram",		false, 	null);	
+		addParameters("d",  "dependency", 	"show dependencies",	false, 	null);	
+		addParameters("b",  "basic", 		"basic parsers",		false, 	null);
+		addParameters("e",  "expand", 		"don't expand JDK",		false, 	null);
+		addParameters("pa",  "package", 	"don't expand outside of package",	false, null);
 
-		//ShortName	/ LongName / Description /  Required? / optional args? / Allowed Argument #
+		//ShortName	/ LongName / Description /  Required? / default
 		
 		loadArguments(args);
 	}
 	
 	private void loadArguments(String[] args) {
 		
-		CommandLineParser parser = new DefaultParser();
-	    HelpFormatter formatter = new HelpFormatter();
-
-        try {
-            cmd = parser.parse(options, args, true);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            formatter.printHelp("cmd-arguments", options);
-            System.exit(0);
-        }
+		Option currentOption = null;
+		
+		for(int i = 0; i < args.length; i++) {
+			String arg = args[i];
+			if(arg.charAt(0) == '-') {
+				if(arg.charAt(1) == '-') {
+					currentOption = findOption(arg.substring(2));
+				}else {
+					currentOption = findOption(arg.substring(1));
+				}
+				if(currentOption!=null) {
+					currentOption.setActive();
+				}else {
+					System.out.println("Unknown argument : " + arg);
+				}
+			}else {
+				if(currentOption != null) {
+					currentOption.addValue(arg);
+				}
+			}
+		}
+		
+		fillDefaults();
+		List<String> missing = checkRequirements();
+		
+		if(!missing.isEmpty()) {
+			printHelp(missing);
+	        System.exit(0);
+		}
 	}
+	
+	
+	public void fillDefaults() {
+		for(Option o : options) {
+			if(o.isActive() && o.values.isEmpty() && o.defaultValue != null) {
+				o.addValue(o.defaultValue);
+			}
+		}
+	}
+	
 	
 	public void printArguments() {
 		
 		System.out.println("=== Arguments ===");
-		for(Option o : cmd.getOptions()) {
-			System.out.println(o.getOpt() + " " + (o.getValuesList() == null ? "" : o.getValuesList().toString()));
+		for(Option o : options) {
+			if(o.isActive()) {
+				System.out.println(o);
+			}
 		}
 		System.out.println("=====");
 	}
+	
 
-	public String getValue(String s) {
-		String ss = cmd.getOptionValue(s);
-		return ss;
+	public String[] getValues(String s) {
+		Option o = findOption(s);
+		if(o == null  || !o.active)
+			return null;
+		return o.getValues();
 	}
+	
+	
+	public String getValue(String s) {
+		Option o = findOption(s);
+		if(o == null  || !o.active)
+			return null;
+		return o.getValues()[0];
+	}
+	
 	
 	public boolean hasArg(String s) {
-		return cmd.hasOption(s);
+		Option o = findOption(s);
+		if(o == null)
+			return false;
+		return o.isActive();
 	}
 	
 	
-	/*
-	 * Convenience more than anything. You don't need to know the argument name to get the classes or path
-	 */
+	
 	public String[] getClasses() {
-		return cmd.getOptionValues("c");
+		return getValues("c");
 	}
+	
 	public String getPath() {
-		return cmd.getOptionValue("p");
+		return getValue("p");
 	}
 	
 	
-	private class JJOption extends Option{
-		
-		private final String defaultValue;
-		
-		public JJOption(String opt, String longOpt, String description, 
-						boolean hasArg, int numberOfArgs, boolean required, String defaultValue) throws IllegalArgumentException {
-			super(opt, longOpt, hasArg, description);
-			
-			setOptionalArg(hasArg);
-			if(hasArg) {
-				setArgs(numberOfArgs);
+	public Option findOption(String s) {
+		for(Option o : options) {
+			if(o.equals(s)) {
+				return o;
 			}
-			setRequired(required);
-			
+		}
+		return null;
+	}
+	
+	public List<String> checkRequirements() {
+		List<String> missing = new ArrayList<String>();
+		for(int i = 0; i < options.size(); i++) {
+			Option o = options.get(i);
+			if(!o.isActive() && o.required) {
+				missing.add(o.shortName);
+			}
+		}
+		return missing;
+	}
+	
+	public void printHelp(List<String> missingRequirements) {
+		System.out.println("Missing required arguments :" + missingRequirements.toString());
+		for(int i = 0; i < options.size(); i++) {
+			Option o = options.get(i);
+			System.out.println("\t" + "-"+o.shortName + " " + "\t--" + o.longName + " \t " + o.description);
+		}
+	}
+	
+	
+	
+	class Option{
+		public final String shortName;
+		public final String longName;
+		public final String description;
+		public final boolean required;
+		public final String defaultValue;
+		
+		private List<String> values;
+		private boolean active;
+		
+		public Option(String sn, String ln, String desc, boolean req, String defaultValue) {
+			this.shortName = sn;
+			this.longName = ln;
+			this.description = desc;
+			this.required = req;
 			this.defaultValue = defaultValue;
+			this.values = new ArrayList<String>();
 		}
 		
-		@Override
-		public List<String> getValuesList(){
-			List<String> ls = super.getValuesList();
-			if(ls.isEmpty()) {
-				ls.add(defaultValue);
-			}
-			return ls;
+		public String[] getValues() {
+			return values.toArray(new String[] {});
+		}
+		
+		public String getValue() {
+			return values.get(0);
+		}
+		
+		public boolean equals(String s) {
+			return (s.equals(shortName) || s.equals(longName));
+		}
+		
+		public void addValue(String s) {
+			values.add(s);
+		}
+		
+		public void setActive() {
+			this.active = true;
+		}
+		
+		public boolean isActive() {
+			return this.active;
+		}
+		
+		public String toString() {
+			return shortName + " " + longName + " " + values.toString();
 		}
 	}
 	
