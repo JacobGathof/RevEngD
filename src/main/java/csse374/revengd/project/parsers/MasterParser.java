@@ -2,6 +2,7 @@ package csse374.revengd.project.parsers;
 
 import java.util.*;
 
+import csse374.revengd.project.Configuration;
 import csse374.revengd.project.parserstrategies.IParserStrategy;
 import csse374.revengd.project.umlobjects.IUMLObject;
 import csse374.revengd.soot.SceneBuilder;
@@ -13,7 +14,7 @@ public class MasterParser implements IParser{
 	List<IParserStrategy> strategies;
 	Set<SootClass> visited;
 
-	public MasterParser(String path, List<IParserStrategy> strategies){
+	public MasterParser(Configuration config, List<IParserStrategy> strategies){
 		this.strategies = strategies;
 		this.visited = new HashSet<>();
 
@@ -25,11 +26,11 @@ public class MasterParser implements IParser{
 		options.set_allow_phantom_refs(true);
 
 		v.setSootClassPath(v.defaultClassPath());
-		v.extendSootClassPath(path);
+		v.extendSootClassPath(config.getPath());
 	}
 
     @Override
-    public List<IUMLObject> parse(String className, String[] args) {
+    public List<IUMLObject> parse(String className, Configuration config) {
     	List<IUMLObject> umlObjects;
 
     	SootClass clazz = v.loadClassAndSupport(className);

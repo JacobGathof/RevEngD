@@ -84,6 +84,10 @@ public class Configuration {
 		return cmd.getOptionValue(s);
 	}
 	
+	public boolean hasArg(String s) {
+		return cmd.hasOption(s);
+	}
+	
 	public String[] getClasses() {
 		return cmd.getArgs();
 	}

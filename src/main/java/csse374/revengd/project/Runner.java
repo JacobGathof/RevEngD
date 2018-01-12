@@ -15,29 +15,29 @@ public class Runner {
     private IParser parser;
     private IBuilder builder;
     private IDisplayer displayer;
-    private List<String> classes;
+    private Configuration config;
 
-    public Runner(IParser parser, IBuilder builder, IDisplayer displayer, List<String> classes){
+    public Runner(IParser parser, IBuilder builder, IDisplayer displayer, Configuration config){
         this.parser = parser;
         this.builder = builder;
         this.displayer = displayer;
-        this.classes = classes;
+        this.config = config;
     }
 
     public void run(String[] args){
         List<IUMLObject> objects = new ArrayList<>();
-        for(String c : classes){
+        for(String c : config.getClasses()){
             //File f = new File(c.getProtectionDomain().getCodeSource().getLocation().getPath());
             System.out.println("Parsing " + c);
-            objects.addAll(parse(c, args));
+            objects.addAll(parse(c, config));
         }
     	display(build(objects));
     	
         //display(build(parse(path)));
     }
 
-    private List<IUMLObject> parse(String path, String[] args){
-        return parser.parse(path, args);
+    private List<IUMLObject> parse(String path, Configuration config){
+        return parser.parse(path, config);
     }
 
     private String build(List<IUMLObject> objects){

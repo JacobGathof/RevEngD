@@ -2,6 +2,7 @@ package csse374.revengd.project.parsers;
 
 import java.util.List;
 
+import csse374.revengd.project.Configuration;
 import csse374.revengd.project.umlobjects.IUMLObject;
 import soot.Modifier;
 
@@ -16,29 +17,19 @@ public class PrivacyParserFilter implements IParserFilter {
 	IParser parser;
 	
 	@Override
-	public List<IUMLObject> parse(String path, String[] args){
-		List<IUMLObject> sootObjects = parser.parse(path, args);
-		for(String argument : args){
-			if(argument.charAt(0) == '-'){
-				if(argument.length() == 3){
-					if(argument.charAt(1) == 'p'){
-						switch(argument.charAt(2)){
-						case 'r':
-							privacy = -1;
-							break;
-							
-						case 'o':
-							privacy = 0;
-							return process(sootObjects);
-						case 'u':
-							privacy = 1;
-							return process(sootObjects);
-						}
-						return sootObjects;
-					}
-				}
-			}
+	public List<IUMLObject> parse(String path, Configuration config){
+		List<IUMLObject> sootObjects = parser.parse(path, config);
+		
+		if(config.hasArg("pr")) {
+			privacy = -1;
 		}
+		if(config.hasArg("po")) {
+			privacy = 0;
+		}
+		if(config.hasArg("pu")) {
+			privacy = 1;
+		}
+		
 		return sootObjects;
 	}
 
