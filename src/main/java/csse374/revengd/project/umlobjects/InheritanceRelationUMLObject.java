@@ -40,7 +40,7 @@ public class InheritanceRelationUMLObject implements IUMLObject {
 	
 	@Override
 	public List<String> getPackage() {
-		return (List<String>) Lists.newArrayList(child.getName().split("\\.")[0], child.getName().split("\\.")[1]);
+		return (List<String>) Lists.newArrayList(child.getName().split("\\.")[0], child.getName().split("\\.")[0]);
 	}
 	
 	

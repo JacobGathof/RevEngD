@@ -34,6 +34,6 @@ public class SuperclassUMLObject implements IUMLObject {
 	
 	@Override
 	public List<String> getPackage() {
-		return (List<String>) Lists.newArrayList(source.getName().split("\\.")[0], target.getName().split("\\.")[1]);
+		return (List<String>) Lists.newArrayList(source.getName().split("\\.")[0], target.getName().split("\\.")[0]);
 	}
 }

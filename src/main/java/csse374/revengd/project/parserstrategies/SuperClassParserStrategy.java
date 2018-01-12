@@ -3,6 +3,7 @@ package csse374.revengd.project.parserstrategies;
 import csse374.revengd.project.umlobjects.ClassUMLObject;
 import csse374.revengd.project.umlobjects.IUMLObject;
 import csse374.revengd.project.umlobjects.InheritanceRelationUMLObject;
+import csse374.revengd.project.umlobjects.SuperclassUMLObject;
 import soot.Scene;
 import soot.SootClass;
 
@@ -16,7 +17,7 @@ public class SuperClassParserStrategy implements IParserStrategy{
         if(clazz.hasSuperclass()) {
             dependencies.add(clazz.getSuperclass());
             umlObjects.add(new ClassUMLObject(clazz.getSuperclass()));
-            umlObjects.add(new InheritanceRelationUMLObject(clazz, clazz.getSuperclass()));
+            umlObjects.add(new SuperclassUMLObject(clazz, clazz.getSuperclass()));
         }
         return umlObjects;
     }

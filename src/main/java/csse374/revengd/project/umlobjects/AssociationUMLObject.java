@@ -45,6 +45,6 @@ public class AssociationUMLObject implements IUMLObject {
     
     @Override
 	public List<String> getPackage() {
-		return (List<String>) Lists.newArrayList(source.getName().split("\\.")[0], reference.getName().split("\\.")[1]);
+		return (List<String>) Lists.newArrayList(source.getName().split("\\.")[0], reference.getName().split("\\.")[0]);
 	}
 }

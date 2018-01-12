@@ -26,7 +26,7 @@ public class PackageParserFilter implements IParserFilter{
 		} else {
     		for(int i = 0; i < sootObjects.size(); i++) {
     			IUMLObject obj = sootObjects.get(i);
-    			String pack = path.split(".")[0];
+    			String pack = path.split("\\.")[0];
     			boolean samePack = true;
     			List<String> packages = obj.getPackage();
     			for(String s : packages) {
@@ -40,29 +40,6 @@ public class PackageParserFilter implements IParserFilter{
     			}
     		}
     	}
-
-		/*for(String argument : args){
-			if(argument.charAt(0) == '-'){
-				if(argument.length() == 3){
-					if(argument.charAt(1) == 'r'){
-						switch(argument.charAt(2)){
-						case 'r':
-							privacy = -1;
-							sootObjects.
-							break;
-
-						case 'o':
-							privacy = 0;
-							return process(sootObjects);
-						case 'u':
-							privacy = 1;
-							return process(sootObjects);
-						}
-						return sootObjects;
-					}
-				}
-			}
-		}*/
 		return sootObjects;
     }
 }

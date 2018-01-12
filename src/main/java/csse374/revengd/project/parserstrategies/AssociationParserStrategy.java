@@ -52,7 +52,6 @@ public class AssociationParserStrategy implements IParserStrategy{
 
 
     public SootClass dePluralizedClass(String type, Scene v){
-        System.out.println(type);
         if(type.endsWith("[]")) {
             return v.loadClassAndSupport(type.substring(0, type.length() - 2));
         }
