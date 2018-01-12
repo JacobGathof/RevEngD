@@ -17,31 +17,23 @@ public class PrivacyParserFilter implements IParserFilter {
 	IParser parser;
 	
 	@Override
-	public List<IUMLObject> parse(String path, Configuration config){
-		List<IUMLObject> sootObjects = parser.parse(path, config);
-		
-		if(config.hasArg("pr")) {
-			privacy = -1;
-		}
-		if(config.hasArg("po")) {
-			privacy = 0;
-		}
-		if(config.hasArg("pu")) {
-			privacy = 1;
-		}
-		
+	public List<IUMLObject> parse(String className){
+		List<IUMLObject> sootObjects = process(parser.parse(className));
 		return sootObjects;
 	}
 
-    public PrivacyParserFilter(IParser parser){
-        this.parser = parser;
+    public PrivacyParserFilter(IParser parser, int privacy){
+		this.parser = parser;
+		this.privacy = privacy;
     }
 
     public List<IUMLObject> process(List<IUMLObject> objects) {
-    	if(privacy == 1){
-    		FilterProtected(objects);
-    	}
-    	FilterPrivate(objects);
+    	if(privacy != 1) {
+			if (privacy == 0) {
+				FilterProtected(objects);
+			}
+			FilterPrivate(objects);
+		}
         return objects;
     }
     private void FilterPrivate(List<IUMLObject> objects){
