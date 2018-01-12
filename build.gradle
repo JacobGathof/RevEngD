@@ -37,7 +37,7 @@ compileJava {
 }
 
 mainClassName = "csse374.revengd.examples.driver.ExamplesDriver"
-applicationDefaultJvmArgs = ["-Xms512m", "-Xmx1024m"]
+applicationDefaultJvmArgs = ["-Xms512m", "-Xmx2048m"]
 run {
     standardInput = System.in
 }
