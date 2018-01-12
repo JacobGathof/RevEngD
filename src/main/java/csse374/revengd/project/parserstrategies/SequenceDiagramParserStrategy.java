@@ -19,6 +19,7 @@ import soot.SootMethod;
 import soot.Unit;
 import soot.Value;
 import soot.baf.internal.BSpecialInvokeInst;
+import soot.baf.internal.BStaticInvokeInst;
 import soot.jimple.AssignStmt;
 import soot.jimple.InvokeExpr;
 import soot.jimple.NewExpr;
@@ -64,13 +65,13 @@ public class SequenceDiagramParserStrategy implements IParserStrategy {
 		UnitGraph unGraph = new ExceptionalUnitGraph(body);
 		Iterator<Unit> stmtIt = unGraph.iterator();
 		System.out.println("about to examine");
-		List<IUMLObject> temp = examine(g, startMethod, clazz, depthToLook/*, stmtIt*/);
+		List<IUMLObject> temp = examine(g, startMethod, clazz, depthToLook, v/*, stmtIt*/);
 		return temp;
 	}
 	
-	private List<IUMLObject> examine(CallGraph g, SootMethod rootMethod, SootClass callingClass, int remainingDepth/*, Iterator<Unit> stmtIt*/){
+	private List<IUMLObject> examine(CallGraph g, SootMethod rootMethod, SootClass callingClass, int remainingDepth, Scene v/*, Iterator<Unit> stmtIt*/){
 		List<IUMLObject> examinationList = new ArrayList<IUMLObject>();
-		System.out.println("Inside examine");
+		//System.out.println("Inside examine");
 		Iterator<MethodOrMethodContext> children = null;
 		//System.out.println(method.getName());
 		if (rootMethod.hasActiveBody()){
@@ -96,7 +97,7 @@ public class SequenceDiagramParserStrategy implements IParserStrategy {
 					//if(stmt instanceof AssignStmt) {
 					Value rightOp = ((AssignStmt) stmt).getRightOp();
 					if (rightOp instanceof InvokeExpr){
-						System.out.println("in assignment statement");
+						//System.out.println("in assignment statement");
 						InvokeExpr temp = (InvokeExpr) rightOp;
 						method = temp.getMethod();
 						children = new Targets (g.edgesOutOf(rootMethod));//g.edgesOutOf(method);
@@ -106,13 +107,17 @@ public class SequenceDiagramParserStrategy implements IParserStrategy {
 				}
 				if (stmt instanceof BSpecialInvokeInst)
 				{
-					
+					System.out.println("BSpecialInvokeInst");
 				
 					//System.out.println("BSpecialInvokeInst");
 					method = ((BSpecialInvokeInst) stmt).getMethod();
 				
 					//Iterator<Edge>
 					children = new Targets(g.edgesOutOf(rootMethod));
+				}
+				if (stmt instanceof BStaticInvokeInst){
+					System.out.println("BStaticInvokeInst");
+					children = new Targets(g.edgesOutOf(((BStaticInvokeInst) stmt).getMethod()));
 				}
 			
 				
@@ -122,21 +127,30 @@ public class SequenceDiagramParserStrategy implements IParserStrategy {
 					while(children!= null && children.hasNext()){
 						SootMethod aChild = (SootMethod) children.next();
 						
-						/*if (!aChild.isConcrete()){
+						if (!aChild.hasActiveBody()){
 							//void performCHAPointerAnalysis(Scene scene, SootMethod method) {
 								  //System.out.println("Performing CHA analysis for " + method.getName() + "() ...");
 								  Hierarchy hierarchy = v.getActiveHierarchy();
-								  Collection possibleMethods = hierarchy.resolveAbstractDispatch(method.getDeclaringClass(), method);
-								  examinationList.add(possibleMethods.iterator().next())
+								  List<SootMethod> possibleMethods = hierarchy.resolveAbstractDispatch(method.getDeclaringClass(), method);
+								  int i = 0;
+								  for(i = 0; i < possibleMethods.size(); i++){
+									  if (possibleMethods.get(i).hasActiveBody()){
+										  aChild = possibleMethods.get(i);
+										  break;
+									  }
+								  }
+								  
+								  
+								  //examinationList.add(possibleMethods.iterator().next());
 								 // this.prettyPrintMethods("CHA resolution for", method, possibleMethods);
 	
-						}*/
-						System.out.println("root: " + rootMethod.getName());
-						System.out.println("aChild: " + aChild.getName());
+						}
+						//System.out.println("root: " + rootMethod.getName());
+						//System.out.println("aChild: " + aChild.getName());
 						
 						examinationList.add(new ReturnUMLObject(callingClass, aChild));
 						
-						examinationList.addAll(examine(g, aChild, aChild.getDeclaringClass(), remainingDepth - 1));
+						examinationList.addAll(examine(g, aChild, aChild.getDeclaringClass(), remainingDepth - 1,v));
 						
 						examinationList.add(new SequenceMethodUMLObject(callingClass, aChild));
 						
