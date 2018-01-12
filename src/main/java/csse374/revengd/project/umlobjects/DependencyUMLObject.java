@@ -21,7 +21,7 @@ public class DependencyUMLObject implements IUMLObject{
     @Override
     public String toUML() {
         if(manyToOne) {
-            return source.toString() + " --> \"1..*\"" + cleanName(reference.toString());
+            return source.toString() + " --> \"1..*\" " + cleanName(reference.toString());
         }
         return source.toString() + " --> " + cleanName(reference.toString());    }
 

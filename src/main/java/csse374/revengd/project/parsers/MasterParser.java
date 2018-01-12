@@ -82,7 +82,7 @@ public class MasterParser implements IParser{
 		}
 
 		for(SootClass c : dependencies){
-			if(!visited.contains(c) && !c.toString().contains("java")) {
+			if(!visited.contains(c)) {
 				visited.add(c);
 				umlObjects.addAll(parseHelper(c));
 			}

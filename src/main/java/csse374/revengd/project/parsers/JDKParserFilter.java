@@ -26,7 +26,7 @@ public class JDKParserFilter implements IParserFilter{
 		} else {
     		for(int i = 0; i < sootObjects.size(); i++) {
     			IUMLObject obj = sootObjects.get(i);
-    			String[] exclusions = new String[] {"java", "javax"};
+    			String[] exclusions = new String[] {"java", "javax", "sun", "lang"};
     			boolean samePack = true;
     			List<String> packages = obj.getPackage();
     			for(String s : packages) {

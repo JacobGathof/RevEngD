@@ -31,7 +31,8 @@ public class Configuration {
 		addParameters("d",  "dependency", 	"show dependencies",	false, 	false, 1, 	null);	
 		addParameters("b",  "basic", 		"basic parsers",		false, 	false, 1, 	null);
 		addParameters("e",  "expand", 		"don't expand JDK",		false, 	false, 1, 	null);
-		
+		addParameters("pa",  "package", 		"don't expand outside of package",		false, 	false, 1, 	null);
+
 		//ShortName	/ LongName / Description /  Required? / optional args? / Allowed Argument #
 		
 		loadArguments(args);

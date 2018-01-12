@@ -33,6 +33,7 @@ public class App {
 		parser = new NonRecursiveParserFilter(parser);
 		parser = new PrivacyParserFilter(parser);
 		parser = new PackageParserFilter(parser);
+		parser = new JDKParserFilter(parser);
 
 		IBuilder builder = new PlantUMLBuilder();
 		IDisplayer displayer = new PlantDisplayer();

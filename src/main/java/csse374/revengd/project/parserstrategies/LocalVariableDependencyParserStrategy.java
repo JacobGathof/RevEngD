@@ -56,7 +56,6 @@ public class LocalVariableDependencyParserStrategy implements IParserStrategy{
     }
 
     private SootClass dePluralizedClass(String type, Scene v){
-        System.out.println(type);
         if(type.endsWith("[]")) {
             return dePluralizedClass(type.substring(0, type.length() - 2), v);
         }

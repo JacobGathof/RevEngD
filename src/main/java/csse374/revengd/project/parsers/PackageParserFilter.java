@@ -21,7 +21,7 @@ public class PackageParserFilter implements IParserFilter{
     public List<IUMLObject> parse(String path, Configuration config) {
     	List<IUMLObject> sootObjects = parser.parse(path, config);
     	
-    	if(!config.hasArg("b")) {
+    	if(!config.hasArg("pa")) {
 			return sootObjects;
 		} else {
     		for(int i = 0; i < sootObjects.size(); i++) {
