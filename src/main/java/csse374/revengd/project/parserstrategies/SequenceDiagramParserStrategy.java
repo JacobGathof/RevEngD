@@ -107,6 +107,25 @@ public class SequenceDiagramParserStrategy implements IParserStrategy {
 						//method = temp.getMethod();
 						//edges = g.edgesOutOf(targetMethod);
 					}
+					if (stmt instanceof BSpecialInvokeInst)
+					{
+						System.out.println("BSpecialInvokeInst");
+					
+						//System.out.println("BSpecialInvokeInst");
+						method = ((BSpecialInvokeInst) stmt).getMethod();
+					
+						//Iterator<Edge>
+						children = new Targets(g.edgesOutOf(rootMethod));
+					}
+					if (stmt instanceof BStaticInvokeInst){
+						System.out.println("BStaticInvokeInst");
+						children = new Targets(g.edgesOutOf(((BStaticInvokeInst) stmt).getMethod()));
+					}
+					if(stmt instanceof InvokeStmt){
+			            InvokeExpr IE = ((InvokeStmt)stmt).getInvokeExpr();
+			            SootMethod aMethod = IE.getMethod();
+			            children = new Targets(g.edgesOutOf(aMethod));
+			        }
 				}
 				if (stmt instanceof BSpecialInvokeInst)
 				{
