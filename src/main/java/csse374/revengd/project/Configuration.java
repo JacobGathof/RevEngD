@@ -9,9 +9,7 @@ public class Configuration {
 	private Options options;
 	private CommandLine cmd;
 	
-	/*
-	 * Does not currently do anything, as the constructor immediately calls loadArguments();
-	 */
+	
 	public void addParameters(String shortName, String longName, String description,
 			 boolean required, boolean hasOptionalArgs, int numValues, String defaultValue) {
 		
@@ -24,7 +22,7 @@ public class Configuration {
 		options = new Options();
 		
 		addParameters("c",  "classes", 		"classes to analyze", 	true, 	true, -2, 	null);	
-		addParameters("p",  "path", 		"path",					true, 	true,  1,	"c:\\");	
+		addParameters("p",  "path", 		"path",					true, 	true,  1,	"");	
 		addParameters("r",  "recursive",	"recursive depth", 		false, 	true,  1,	"5");	
 		addParameters("pu", "public", 		"public scope", 		false, 	false, 1, 	null);	
 		addParameters("pr", "private", 		"private scope", 		false, 	false, 1, 	null);	
