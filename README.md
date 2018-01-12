@@ -3,19 +3,20 @@
 
 
 ### About the project
-This application can analyze a Java project and generate and display the UML diagram representing the class structure. 
-The project currently features 4 command line arguments: 
+This application can analyze a Java project and generate and display the UML diagram or sequence diagram representing the class structure. 
+The project currently features several command line arguments: 
 
-1. [-r] - Parse the project recursively
-2. [-pu] - Only include public fields, methods, and classes
-3. [-po] - Include public and protected fields, methods, and classes
-4. [-pr] - Include fields, methods, and classes of any visibility
+1.  -c,--classes <args>     classes to analyse
+2.  -p,--path <arg>        root project path
+3.  -po,--protected        protected scope
+4.  -pr,--private          private scope
+5.  -pu,--public           public scope
+6.  -r,--recursive <arg>   recursive depth of <arg>
+7.  -sd,--sequence         use sequence diagram
 
-The command line arguement should also contain a path to the root folder at the start and all of the base files you want to examine with a fully qualified name.
 
-The command line after java invocation should look like
+The command line argument should also contain a path to the root folder at the start and all of the base files you want to examine with a fully qualified name.
 
-"Path" "options" "classes"
 
 
 ## Team Contribution
