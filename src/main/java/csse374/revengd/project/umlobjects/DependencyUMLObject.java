@@ -20,8 +20,10 @@ public class DependencyUMLObject implements IUMLObject{
 
     @Override
     public String toUML() {
-        return source.toString() + " --> " + cleanName(reference.toString());
-    }
+        if(manyToOne) {
+            return source.toString() + " --> \"1..*\"" + cleanName(reference.toString());
+        }
+        return source.toString() + " --> " + cleanName(reference.toString());    }
 
     private String cleanName(String className){
         if(className.endsWith("[]")){

@@ -7,9 +7,9 @@ import com.beust.jcommander.internal.Lists;
 import soot.SootClass;
 
 public class AssociationUMLObject implements IUMLObject {
-    SootClass source;
-    SootClass reference;
-    boolean manyToOne;
+    private SootClass source;
+    private SootClass reference;
+    private boolean manyToOne;
 
     public AssociationUMLObject(SootClass source, SootClass reference, boolean manyToOne){
         this.source = source;
@@ -19,7 +19,11 @@ public class AssociationUMLObject implements IUMLObject {
 
     @Override
     public String toUML() {
-        return source.toString() + " --> " + cleanName(reference.toString());
+        if(manyToOne) {
+            return source.toString() + " --* \"1..*\"" + cleanName(reference.toString());
+        }
+        return source.toString() + " --* " + cleanName(reference.toString());
+
     }
 
     private String cleanName(String className){

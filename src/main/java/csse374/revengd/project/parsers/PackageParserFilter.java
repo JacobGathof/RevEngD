@@ -40,7 +40,7 @@ public class PackageParserFilter implements IParserFilter{
     			}
     		}
     	}
-    	
+
 		/*for(String argument : args){
 			if(argument.charAt(0) == '-'){
 				if(argument.length() == 3){
@@ -50,7 +50,7 @@ public class PackageParserFilter implements IParserFilter{
 							privacy = -1;
 							sootObjects.
 							break;
-							
+
 						case 'o':
 							privacy = 0;
 							return process(sootObjects);
