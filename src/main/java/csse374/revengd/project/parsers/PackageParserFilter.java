@@ -18,28 +18,23 @@ public class PackageParserFilter implements IParserFilter{
         return objects;
     }
 
-    public List<IUMLObject> parse(String path, Configuration config) {
-    	List<IUMLObject> sootObjects = parser.parse(path, config);
-    	
-    	if(!config.hasArg("pa")) {
-			return sootObjects;
-		} else {
-    		for(int i = 0; i < sootObjects.size(); i++) {
-    			IUMLObject obj = sootObjects.get(i);
-    			String pack = path.split("\\.")[0];
-    			boolean samePack = true;
-    			List<String> packages = obj.getPackage();
-    			for(String s : packages) {
-    				if(!s.equals(pack)) {
-    					samePack = false;
-    				}
-    			}
-    			if(!samePack) {
-    				sootObjects.remove(obj);
-    				i--;
-    			}
-    		}
-    	}
+    public List<IUMLObject> parse(String className) {
+    	List<IUMLObject> sootObjects = parser.parse(className);
+		for(int i = 0; i < sootObjects.size(); i++) {
+			IUMLObject obj = sootObjects.get(i);
+			String pack = className.split("\\.")[0];
+			boolean samePack = true;
+			List<String> packages = obj.getPackage();
+			for(String s : packages) {
+				if(!s.equals(pack)) {
+					samePack = false;
+				}
+			}
+			if(!samePack) {
+				sootObjects.remove(obj);
+				i--;
+			}
+		}
 		return sootObjects;
     }
 }

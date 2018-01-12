@@ -18,43 +18,15 @@ public class NonRecursiveParserFilter implements IParserFilter{
         return objects;
     }
 
-    public List<IUMLObject> parse(String path, Configuration config) {
-    	List<IUMLObject> sootObjects = parser.parse(path, config);
-    	
-    	if(config.hasArg("r")) {
-			return sootObjects;
-		} else {
-    		for(int i = 0; i < sootObjects.size(); i++) {
-    			IUMLObject obj = sootObjects.get(i);
-    			if(!Arrays.asList(config.getClasses()).contains(obj.getSootClass().getName())) {
-    				sootObjects.remove(obj);
-    				i--;
-    			}
-    		}
-    	}
-    	
-		/*for(String argument : args){
-			if(argument.charAt(0) == '-'){
-				if(argument.length() == 3){
-					if(argument.charAt(1) == 'r'){
-						switch(argument.charAt(2)){
-						case 'r':
-							privacy = -1;
-							sootObjects.
-							break;
-							
-						case 'o':
-							privacy = 0;
-							return process(sootObjects);
-						case 'u':
-							privacy = 1;
-							return process(sootObjects);
-						}
-						return sootObjects;
-					}
-				}
+    public List<IUMLObject> parse(String className) {
+    	List<IUMLObject> sootObjects = parser.parse(className);
+		for(int i = 0; i < sootObjects.size(); i++) {
+			IUMLObject obj = sootObjects.get(i);
+			if(className.contains(obj.getSootClass().getName())) {
+				sootObjects.remove(obj);
+				i--;
 			}
-		}*/
+		}
 		return sootObjects;
     }
 }

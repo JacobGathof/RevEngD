@@ -17,7 +17,7 @@ public class MasterParser implements IParser{
 	List<IParserStrategy> strategies;
 	Set<SootClass> visited;
 
-	public MasterParser(Configuration config, List<IParserStrategy> strategies){
+	public MasterParser(String path, List<IParserStrategy> strategies){
 		this.strategies = strategies;
 		this.visited = new HashSet<>();
 
@@ -43,13 +43,13 @@ public class MasterParser implements IParser{
 		options.set_allow_phantom_refs(true);
 
 		v.setSootClassPath(v.defaultClassPath());
-		v.extendSootClassPath(config.getPath());
+		v.extendSootClassPath(path);
 
 
 	}
 
     @Override
-    public List<IUMLObject> parse(String className, Configuration config) {
+    public List<IUMLObject> parse(String className) {
     	List<IUMLObject> umlObjects;
 
     	SootClass clazz = v.loadClassAndSupport(className);
