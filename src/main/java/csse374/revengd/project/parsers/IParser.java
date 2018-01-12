@@ -6,5 +6,5 @@ import csse374.revengd.project.Configuration;
 import csse374.revengd.project.umlobjects.IUMLObject;
 
 public interface IParser {
-    List<IUMLObject> parse(String path, Configuration config);
+    List<IUMLObject> parse(String className);
 }
