@@ -6,6 +6,9 @@ import csse374.revengd.project.parserstrategies.IParserStrategy;
 import csse374.revengd.project.umlobjects.IUMLObject;
 import csse374.revengd.soot.SceneBuilder;
 import soot.*;
+import soot.jimple.toolkits.callgraph.CallGraph;
+import soot.jimple.toolkits.callgraph.ContextSensitiveCallGraph;
+import soot.jimple.toolkits.callgraph.Targets;
 import soot.options.Options;
 
 public class MasterParser implements IParser{
@@ -31,6 +34,7 @@ public class MasterParser implements IParser{
 		po.setPhaseOption("tag.ln", "on");
 		po.setPhaseOption("jj.a", "on");
 		po.setPhaseOption("jj.ule", "on");
+		po.setPhaseOption("cg.spark", "on");
 
 		options.set_whole_program(true);
 		options.set_no_bodies_for_excluded(true);
@@ -39,12 +43,24 @@ public class MasterParser implements IParser{
 
 		v.setSootClassPath(v.defaultClassPath());
 		v.extendSootClassPath(path);
+
+
 	}
 
     @Override
     public List<IUMLObject> parse(String className, String[] args) {
     	SootClass clazz = v.loadClassAndSupport(className);
-    	//v.getClasses();
+    	//clazz.setApplicationClass();
+    	//v.setMainClass(clazz);
+    	//v.loadNecessaryClasses();
+		/*
+    	List<SootMethod> points = new ArrayList<>();
+    	points.add(clazz.getMethodByName("main"));
+		v.setEntryPoints(points);
+		PackManager.v().runPacks();
+		CallGraph g = v.getCallGraph();
+		Iterator<MethodOrMethodContext> children = new Targets(g.edgesOutOf(points.get(0)));
+		*/
 		List<IUMLObject> umlObjects = parseHelper(clazz);
 
         return umlObjects;
