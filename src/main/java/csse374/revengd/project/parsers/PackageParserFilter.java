@@ -26,14 +26,14 @@ public class PackageParserFilter implements IParserFilter{
 		} else {
     		for(int i = 0; i < sootObjects.size(); i++) {
     			IUMLObject obj = sootObjects.get(i);
-    			String pack = path.split(".")[0];
-    			if(!obj.getSootClass().getName().split(".")[0].equals(pack)) {
+    			String pack = path.split("\\.")[0];
+    			if(!obj.getSootClass().getName().split("\\.")[0].equals(pack)) {
     				sootObjects.remove(obj);
     				i--;
     			}
     		}
     	}
-    	
+
 		/*for(String argument : args){
 			if(argument.charAt(0) == '-'){
 				if(argument.length() == 3){
@@ -43,7 +43,7 @@ public class PackageParserFilter implements IParserFilter{
 							privacy = -1;
 							sootObjects.
 							break;
-							
+
 						case 'o':
 							privacy = 0;
 							return process(sootObjects);
