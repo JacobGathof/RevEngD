@@ -2,14 +2,11 @@ package csse374.revengd.project.parserstrategies;
 
 import csse374.revengd.project.umlobjects.DependencyUMLObject;
 import csse374.revengd.project.umlobjects.IUMLObject;
-import edu.rosehulman.jvm.sigevaluator.GenericType;
-import edu.rosehulman.jvm.sigevaluator.MethodEvaluator;
 import soot.*;
 import soot.baf.internal.BNewInst;
 import soot.jimple.AssignStmt;
 import soot.jimple.InvokeExpr;
 import soot.jimple.InvokeStmt;
-import soot.tagkit.Tag;
 import soot.toolkits.graph.ExceptionalUnitGraph;
 
 import java.util.ArrayList;
@@ -24,7 +21,6 @@ public class LocalVariableDependencyParserStrategy implements IParserStrategy{
             return umlObjects;
         }
         clazz.setApplicationClass();
-        //v.setMainClass(clazz);
         v.loadNecessaryClasses();
         List<SootMethod> methods = clazz.getMethods();
         v.setEntryPoints(methods);
