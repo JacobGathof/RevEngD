@@ -98,33 +98,52 @@ public class SequenceDiagramParserStrategy implements IParserStrategy {
 				
 				if(stmt instanceof AssignStmt){
 					//if(stmt instanceof AssignStmt) {
+					//System.out.println("Assignment");
 					Value rightOp = ((AssignStmt) stmt).getRightOp();
 					if (rightOp instanceof InvokeExpr){
-						//System.out.println("in assignment statement");
+						System.out.println("assignment invoke");
 						InvokeExpr temp = (InvokeExpr) rightOp;
 						method = temp.getMethod();
-						children = new Targets (g.edgesOutOf(rootMethod));//g.edgesOutOf(method);
+						System.out.println(method);
+						
+						
+						//children = new Targets(g.edgesOutOf(rootMethod));
+						children = new Targets(g.edgesOutOf(method));
+						
+						System.out.println(children.hasNext());
+						//g.edgesOutOf(method);
 						//method = temp.getMethod();
 						//edges = g.edgesOutOf(targetMethod);
 					}
 					if (stmt instanceof BSpecialInvokeInst)
 					{
-						System.out.println("BSpecialInvokeInst");
+						System.out.println("AssignBSpecialInvokeInst");
 					
 						//System.out.println("BSpecialInvokeInst");
 						method = ((BSpecialInvokeInst) stmt).getMethod();
-					
+						System.out.println(method);
+
 						//Iterator<Edge>
 						children = new Targets(g.edgesOutOf(rootMethod));
+						//children = new Targets(g.edgesOutOf(method));
 					}
 					if (stmt instanceof BStaticInvokeInst){
-						System.out.println("BStaticInvokeInst");
-						children = new Targets(g.edgesOutOf(((BStaticInvokeInst) stmt).getMethod()));
+						System.out.println("AssingBStaticInvokeInst");
+						method = ((BStaticInvokeInst) stmt).getMethod();
+						System.out.println(method);
+
+						children = new Targets(g.edgesOutOf(rootMethod));
+						//children = new Targets(g.edgesOutOf(method));
 					}
 					if(stmt instanceof InvokeStmt){
+						System.out.println("AssignInvoke");
 			            InvokeExpr IE = ((InvokeStmt)stmt).getInvokeExpr();
-			            SootMethod aMethod = IE.getMethod();
-			            children = new Targets(g.edgesOutOf(aMethod));
+			            method = IE.getMethod();
+						System.out.println(method);
+
+						//children = new Targets(g.edgesOutOf(rootMethod));
+						children = new Targets(g.edgesOutOf(method));
+			            
 			        }
 				}
 				if (stmt instanceof BSpecialInvokeInst)
@@ -134,18 +153,37 @@ public class SequenceDiagramParserStrategy implements IParserStrategy {
 					//System.out.println("BSpecialInvokeInst");
 					method = ((BSpecialInvokeInst) stmt).getMethod();
 				
+					System.out.println(method);
+
 					//Iterator<Edge>
 					children = new Targets(g.edgesOutOf(rootMethod));
+					//children = new Targets(g.edgesOutOf(method));
 				}
 				if (stmt instanceof BStaticInvokeInst){
 					System.out.println("BStaticInvokeInst");
-					children = new Targets(g.edgesOutOf(((BStaticInvokeInst) stmt).getMethod()));
+					method = ((BStaticInvokeInst) stmt).getMethod();
+					System.out.println(method);
+
+					children = new Targets(g.edgesOutOf(rootMethod));
+					//children = new Targets(g.edgesOutOf(method));
 				}
 				if(stmt instanceof InvokeStmt){
+					System.out.println("Only Invoke");
 		            InvokeExpr IE = ((InvokeStmt)stmt).getInvokeExpr();
-		            SootMethod aMethod = IE.getMethod();
-		            children = new Targets(g.edgesOutOf(aMethod));
+		            method = IE.getMethod();
+					System.out.println(method);
+					
+
+		            //children = new Targets(g.edgesOutOf(rootMethod));
+					children = new Targets(g.edgesOutOf(method));
+					System.out.println(children.hasNext());
 		        }
+				if (stmt instanceof BNewInst){
+					System.out.println("BNewInst");
+					BNewInst NI = (BNewInst) stmt;
+					
+				}
+				
 		        /*else if(stmt instanceof AssignStmt){
 		            AssignStmt AS = (AssignStmt)stmt;
 		            
@@ -185,6 +223,13 @@ public class SequenceDiagramParserStrategy implements IParserStrategy {
 						//}
 						//System.out.println("root: " + rootMethod.getName());
 						//System.out.println("aChild: " + aChild.getName());
+						
+						/*examinationList.add(new ReturnUMLObject(callingClass, method));
+						
+						examinationList.addAll(examine(g, method, method.getDeclaringClass(), remainingDepth - 1,v));
+						
+						examinationList.add(new SequenceMethodUMLObject(callingClass, method));
+						*/
 						
 						examinationList.add(new ReturnUMLObject(callingClass, aChild));
 						
