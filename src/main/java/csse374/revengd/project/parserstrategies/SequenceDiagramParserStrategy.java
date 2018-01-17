@@ -42,9 +42,10 @@ public class SequenceDiagramParserStrategy implements IParserStrategy {
 	private ISDContextResolutionCommand resolveCommand = new NullContextResolutionCommand();// = new FirstContextResolutionCommand();
 	
 	
-	public SequenceDiagramParserStrategy (String methodName, int aDepthToLook){
+	public SequenceDiagramParserStrategy (String methodName, int aDepthToLook, ISDContextResolutionCommand command){
 		startMethodName = methodName;
 		depthToLook = aDepthToLook;
+		resolveCommand = command;
 	}
 	@Override
 	public List<IUMLObject> parse(SootClass clazz, List<SootClass> dependencies, Scene v) {
