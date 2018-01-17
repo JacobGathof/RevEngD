@@ -5,6 +5,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import csse374.revengd.project.parserstrategies.resolutioncommands.FirstContextResolutionCommand;
+import csse374.revengd.project.parserstrategies.resolutioncommands.ISDContextResolutionCommand;
+import csse374.revengd.project.parserstrategies.resolutioncommands.NullContextResolutionCommand;
 import csse374.revengd.project.umlobjects.IUMLObject;
 import csse374.revengd.project.umlobjects.MethodUMLObject;
 import csse374.revengd.project.umlobjects.ReturnUMLObject;
@@ -35,7 +38,9 @@ import soot.toolkits.graph.UnitGraph;
 public class SequenceDiagramParserStrategy implements IParserStrategy {
 
 	private String startMethodName;
-	int depthToLook;
+	private int depthToLook;
+	private ISDContextResolutionCommand resolveCommand = new NullContextResolutionCommand();// = new FirstContextResolutionCommand();
+	
 	
 	public SequenceDiagramParserStrategy (String methodName, int aDepthToLook){
 		startMethodName = methodName;
@@ -56,11 +61,11 @@ public class SequenceDiagramParserStrategy implements IParserStrategy {
 		v.setEntryPoints(startMethods);
 
 		System.out.println("about to examine");
-		List<IUMLObject> temp = examine(g, startMethod, clazz, depthToLook, v);
+		List<IUMLObject> temp = examine(g, startMethod, clazz, v, depthToLook);
 		return temp;
 	}
 	
-	private List<IUMLObject> examine(CallGraph g, SootMethod rootMethod, SootClass callingClass, int remainingDepth, Scene v/*, Iterator<Unit> stmtIt*/){
+	private List<IUMLObject> examine(CallGraph g, SootMethod rootMethod, SootClass callingClass,  Scene v, int remainingDepth){
 		List<IUMLObject> examinationList = new ArrayList<>();
 		Iterator<MethodOrMethodContext> children;
 		if (rootMethod.hasActiveBody()){
@@ -72,19 +77,23 @@ public class SequenceDiagramParserStrategy implements IParserStrategy {
 			while(children.hasNext()){
 				SootMethod aChild = (SootMethod) children.next();
 				examinationList.add(new SequenceMethodUMLObject(callingClass, aChild));
-				examinationList.addAll(examine(g, aChild, aChild.getDeclaringClass(), remainingDepth - 1,v));
+				examinationList.addAll(examine(g, aChild, aChild.getDeclaringClass(), v, remainingDepth - 1));
 				examinationList.add(new ReturnUMLObject(callingClass, aChild));
 			}
 		}
 		else {
-			Hierarchy hierarchy = v.getActiveHierarchy();
+			List<SootMethod> concMethods = resolveCommand.resolve(g, rootMethod, callingClass, v);
+			for(int i = 0; i < concMethods.size(); i++){
+				this.examine(g, concMethods.get(i), callingClass, v, remainingDepth);
+			}
+			/*Hierarchy hierarchy = v.getActiveHierarchy();
 			  List<SootMethod> possibleMethods = hierarchy.resolveAbstractDispatch(rootMethod.getDeclaringClass(), rootMethod);
 			  for(int i = 0; i < possibleMethods.size(); i++){
 				  if (possibleMethods.get(i).hasActiveBody()){
-					  examine(g, possibleMethods.get(i), callingClass, remainingDepth, v);
+					  examine(g, possibleMethods.get(i), callingClass,  v, remainingDepth);
 					  break;
 				  }
-			  }
+			  }*/
 		}
 		return examinationList;
 	}
