@@ -1,0 +1,7 @@
+path=C:\\
+classes=Java.string, Java.lang
+filters=NonRecursiveParserFilter
+strategies=SequenceDiagramParserStrategy
+builder=SequenceDiagramBuilder
+displayer=PlantDisplayer
+commands=NullContextResolutionCommand

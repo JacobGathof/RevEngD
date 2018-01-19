@@ -14,7 +14,8 @@ public class App {
     public static void main(String[] args){
     	
     	Configuration config = new Configuration(args);
-    	config.printArguments();
+    	
+    	/*
 
 		IBuilder builder;
 
@@ -70,6 +71,7 @@ public class App {
 
 		runner.run(config.getClasses());
 		
+		*/
 		
     }
 }
