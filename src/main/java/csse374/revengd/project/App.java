@@ -1,6 +1,7 @@
 package csse374.revengd.project;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import csse374.revengd.project.builder.SequenceDiagramBuilder;
 import csse374.revengd.project.parsers.*;
@@ -9,67 +10,121 @@ import csse374.revengd.project.builder.IBuilder;
 import csse374.revengd.project.builder.PlantUMLBuilder;
 import csse374.revengd.project.displayer.IDisplayer;
 import csse374.revengd.project.displayer.PlantDisplayer;
+import csse374.revengd.project.parserstrategies.resolutioncommands.ISDContextResolutionCommand;
 
 public class App {
     public static void main(String[] args){
     	
     	Configuration config = new Configuration(args);
-    	config.printArguments();
+
+		List<String> strategies = new ArrayList<>();
+		List<String> filters = new ArrayList<>();
+		List<String> detectors = new ArrayList<>();
+
+		List<IParserStrategy> UMLStrategies = new ArrayList<>();
+
+		if(config.isSequence()){
+			String command = config.getCommand();
+			try {
+				Class clazz = Class.forName(command);
+				if (clazz.isAssignableFrom(ISDContextResolutionCommand.class)) {
+					ISDContextResolutionCommand comm = (ISDContextResolutionCommand) clazz.newInstance();
+					UMLStrategies.add(new SequenceDiagramParserStrategy("main", 2, comm));
+				}
+			} catch (InstantiationException e) {
+				System.out.println("Could not instantiate class " + command);
+			} catch (IllegalAccessException e) {
+				System.out.println("Could not access class " + command);
+			} catch (ClassNotFoundException e) {
+				System.out.println("Could not find class " + command);
+			}
+		}
+		else {
+			for (String strategy : strategies) {
+				try {
+					Class clazz = Class.forName(strategy);
+					if (clazz.isAssignableFrom(IParserStrategy.class)) {
+						IParserStrategy strat = (IParserStrategy) clazz.newInstance();
+						UMLStrategies.add(strat);
+					}
+					else{
+						System.out.println("Given strategy " + strategy + " is not a valid strategy");
+						return;
+					}
+				} catch (InstantiationException e) {
+					System.out.println("Could not instantiate class " + strategy);
+				} catch (IllegalAccessException e) {
+					System.out.println("Could not access class " + strategy);
+				} catch (ClassNotFoundException e) {
+					System.out.println("Could not find class " + strategy);
+				}
+			}
+		}
+
+		IParser parser = new MasterParser(config.getPath(), UMLStrategies);
+
+		for(String filter : filters){
+			try {
+				Class clazz = Class.forName(filter);
+				if(clazz.isAssignableFrom(IParserFilter.class)){
+					parser = (IParserFilter) clazz.getConstructor(IParser.class).newInstance(parser);
+				}
+				else{
+					System.out.println("Given filter " + filter + " is not a valid filter");
+					return;
+				}
+			}
+			catch (IllegalAccessException e){
+				System.out.println("Could not access class " + filter);
+			}
+			catch (ClassNotFoundException e){
+				System.out.println("Could not find class " + filter);
+			}
+			catch(Exception e){
+				System.out.println("Could not instantiate class " + filter);
+			}
+		}
+
+		for(String detector : detectors){
+			try {
+				Class clazz = Class.forName(detector);
+				if(clazz.isAssignableFrom(IParserDetector.class)){
+					parser = (IParserFilter) clazz.getConstructor(IParser.class).newInstance(parser);
+				}
+				else{
+					System.out.println("Given detector " + detector + " is not a valid detector");
+					return;
+				}
+			}
+			catch (IllegalAccessException e){
+				System.out.println("Could not access class " + detector);
+			}
+			catch (ClassNotFoundException e){
+				System.out.println("Could not find class " + detector);
+			}
+			catch(Exception e){
+				System.out.println("Could not instantiate class " + detector);
+			}
+		}
 
 		IBuilder builder;
-
-		//Create and decorate parser with its filters
-		ArrayList<IParserStrategy> defaultUMLStrategies = new ArrayList<>();
-		if(config.hasArg("sd")) {
-			builder = new SequenceDiagramBuilder();
-			defaultUMLStrategies.add(new SequenceDiagramParserStrategy("main", 2));
-		}
-		else{
-			builder = new PlantUMLBuilder(true);
-			if (config.hasArg("basic")) {
-				defaultUMLStrategies.add(new InstanceVariableParserStrategy());
-				defaultUMLStrategies.add(new InheritanceParserStrategy());
-				defaultUMLStrategies.add(new MethodParserStrategy());
-				defaultUMLStrategies.add(new SuperClassParserStrategy());
+		try {
+			Class clazz = Class.forName(config.getBuilder());
+			if(clazz.isAssignableFrom(IBuilder.class)){
+				builder = (IBuilder) clazz.getConstructor(boolean.class).newInstance(true);
 			}
-			if (config.hasArg("dependency")) {
-				defaultUMLStrategies.add(new MethodSignatureDependencyParserStrategy());
-				defaultUMLStrategies.add(new AssociationParserStrategy());
-				defaultUMLStrategies.add(new LocalVariableDependencyParserStrategy());
+			else{
+				System.out.println("Given builder " + config.getBuilder() + " is not a valid builder");
+				return;
 			}
 		}
-
-		IParser parser = new MasterParser(config.getPath(), defaultUMLStrategies);
-
-		if(!config.hasArg("r")) {
-			parser = new NonRecursiveParserFilter(parser);
+		catch(Exception e){
+			System.out.println("Could not create builder " + config.getBuilder());
+			return;
 		}
-
-		if(config.hasArg("pr")){
-			parser = new PrivacyParserFilter(parser, -1);
-		}
-		else if(config.hasArg("po")){
-			parser = new PrivacyParserFilter(parser, 0);
-		}
-		else if(config.hasArg("pu")){
-			parser = new PrivacyParserFilter(parser, 1);
-		}
-
-		if(config.hasArg("pa")) {
-			//builder = new PlantUMLBuilder(false);
-			parser = new PackageParserFilter(parser);
-		}
-
-		if(!config.hasArg("e")) {
-			parser = new JDKParserFilter(parser);
-		}
-
-		IDisplayer displayer = new PlantDisplayer();
 
 		Runner runner = new Runner(parser, builder, displayer);
 
 		runner.run(config.getClasses());
-		
-		
     }
 }
