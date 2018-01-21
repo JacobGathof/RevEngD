@@ -1,206 +1,124 @@
 package csse374.revengd.project;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
 
 
 public class Configuration {
 	
-	private List<Option> options;
-	
-	public void addParameters(String shortName, String longName, String description,
-			 boolean required, String defaultValue) {
-		
-		Option option = new Option(shortName, longName, description, required, defaultValue);
-		options.add(option);
-	}
+	private Map<String, List<String>> parameters;
+	private final List<String> requiredParameters = Arrays.asList();
+	private boolean isSequenceDiagram;
 	
 	public Configuration(String[] args) {
 		
-		options = new ArrayList<Option>();
+		isSequenceDiagram = false;
+		parameters = new HashMap<String, List<String>>();		
+		try {
+			parseSettingsFile(args[0]);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void parseSettingsFile(String filename) throws FileNotFoundException {
 		
-		addParameters("c",  "classes", 		"classes to analyze", 	true,	null);	
-		addParameters("p",  "path", 		"path",					true, 	"");	
-		addParameters("r",  "recursive",	"recursive depth", 		false, 	"5");	
-		addParameters("pu", "public", 		"public scope", 		false, 	null);	
-		addParameters("pr", "private", 		"private scope", 		false, 	null);	
-		addParameters("po", "protected",	"protected scope", 		false, 	null);	
-		addParameters("sd", "sequence", 	"sequence diagram",		false, 	null);	
-		addParameters("d",  "dependency", 	"show dependencies",	false, 	null);	
-		addParameters("b",  "basic", 		"basic parsers",		false, 	null);
-		addParameters("e",  "expand", 		"don't expand JDK",		false, 	null);
-		addParameters("pa",  "package", 	"don't expand outside of package",	false, null);
+		Scanner scan = new Scanner(new File(filename));
+		while(scan.hasNextLine()) {
+			String line = scan.nextLine();
+			if(line.length() < 2)
+				continue;
+			String args[] = line.split("=");
+			if(args.length != 2) 
+				continue;
+			
+			String key = args[0].trim().toLowerCase();
+			String vals[] = args[1].trim().replace(" ", "").split(",");	
+			parameters.put(key, Arrays.asList(vals));
+		}
+		
+		if(parameters.get("commands") != null && !parameters.get("commands").isEmpty()) {
+			isSequenceDiagram = true;
+		}
+		
+		printParameters();
+		
+		if(!checkRequiredArguments()) {
+			System.exit(0);
+		}
+		
+		scan.close();
+	}
+	
+	private void printParameters() {
+		for(String s : parameters.keySet()) {
+			System.out.println("" + s + " -- " + parameters.get(s).toString());
+		}
+	}
+	
+	
+	private boolean checkRequiredArguments() {
+		if(parameters.keySet().containsAll(requiredParameters))
+			return true;
+		List<String> missing = new ArrayList<>();
+		for(String s : requiredParameters) {
+			if(!parameters.containsKey(s)) {
+				missing.add(s);
+			}
+		}
+		System.err.println("Missing : " + missing.toString());
+		return false;
+	}
 
-		//ShortName	/ LongName / Description /  Required? / default
-		
-		loadArguments(args);
+	public List<String> getValues(String s) {
+		return parameters.get(s);
 	}
-	
-	private void loadArguments(String[] args) {
-		
-		Option currentOption = null;
-		
-		for(int i = 0; i < args.length; i++) {
-			String arg = args[i];
-			if(arg.charAt(0) == '-') {
-				if(arg.charAt(1) == '-') {
-					currentOption = findOption(arg.substring(2));
-				}else {
-					currentOption = findOption(arg.substring(1));
-				}
-				if(currentOption!=null) {
-					currentOption.setActive();
-				}else {
-					System.out.println("Unknown argument : " + arg);
-				}
-			}else {
-				if(currentOption != null) {
-					currentOption.addValue(arg);
-				}
-			}
-		}
-		
-		fillDefaults();
-		List<String> missing = checkRequirements();
-		
-		if(!missing.isEmpty()) {
-			printHelp(missing);
-	        System.exit(0);
-		}
-	}
-	
-	
-	public void fillDefaults() {
-		for(Option o : options) {
-			if(o.isActive() && o.values.isEmpty() && o.defaultValue != null) {
-				o.addValue(o.defaultValue);
-			}
-		}
-	}
-	
-	
-	public void printArguments() {
-		
-		System.out.println("=== Arguments ===");
-		for(Option o : options) {
-			if(o.isActive()) {
-				System.out.println(o);
-			}
-		}
-		System.out.println("=====");
-	}
-	
-
-	public String[] getValues(String s) {
-		Option o = findOption(s);
-		if(o == null  || !o.active)
-			return null;
-		return o.getValues();
-	}
-	
 	
 	public String getValue(String s) {
-		Option o = findOption(s);
-		if(o == null  || !o.active)
+		List<String> ls = getValues(s);
+		if(ls==null) 
 			return null;
-		return o.getValues()[0];
+		return ls.get(0);
 	}
 	
-	
-	public boolean hasArg(String s) {
-		Option o = findOption(s);
-		if(o == null)
-			return false;
-		return o.isActive();
+	public String getCommand() {
+		return getValue("command");
 	}
 	
+	public List<String> getClasses() {
+		return getValues("classes");
+	}
 	
+	public List<String> getBuilders() {
+		if(isSequenceDiagram) {
+			return Arrays.asList("PlantSequenceBuilder");
+		}
+		return Arrays.asList("PlantUMLBuilder");
+	}
 	
-	public String[] getClasses() {
-		return getValues("c");
+	public List<String> getDisplayers() {
+		if(isSequenceDiagram) {
+			return Arrays.asList("PlantSequenceBuilder");
+		}
+		return Arrays.asList("PlantUMLBuilder");
+	}
+	
+	public List<String> getFilters() {
+		return getValues("filters");
+	}
+	
+	public List<String> getStrategies() {
+		return getValues("strategies");
 	}
 	
 	public String getPath() {
-		return getValue("p");
-	}
-	
-	
-	public Option findOption(String s) {
-		for(Option o : options) {
-			if(o.equals(s)) {
-				return o;
-			}
-		}
-		return null;
-	}
-	
-	public List<String> checkRequirements() {
-		List<String> missing = new ArrayList<String>();
-		for(int i = 0; i < options.size(); i++) {
-			Option o = options.get(i);
-			if(!o.isActive() && o.required) {
-				missing.add(o.shortName);
-			}
-		}
-		return missing;
-	}
-	
-	public void printHelp(List<String> missingRequirements) {
-		System.out.println("Missing required arguments :" + missingRequirements.toString());
-		for(int i = 0; i < options.size(); i++) {
-			Option o = options.get(i);
-			System.out.println("\t" + "-"+o.shortName + " " + "\t--" + o.longName + " \t " + o.description);
-		}
-	}
-	
-	
-	
-	class Option{
-		public final String shortName;
-		public final String longName;
-		public final String description;
-		public final boolean required;
-		public final String defaultValue;
-		
-		private List<String> values;
-		private boolean active;
-		
-		public Option(String sn, String ln, String desc, boolean req, String defaultValue) {
-			this.shortName = sn;
-			this.longName = ln;
-			this.description = desc;
-			this.required = req;
-			this.defaultValue = defaultValue;
-			this.values = new ArrayList<String>();
-		}
-		
-		public String[] getValues() {
-			return values.toArray(new String[] {});
-		}
-		
-		public String getValue() {
-			return values.get(0);
-		}
-		
-		public boolean equals(String s) {
-			return (s.equals(shortName) || s.equals(longName));
-		}
-		
-		public void addValue(String s) {
-			values.add(s);
-		}
-		
-		public void setActive() {
-			this.active = true;
-		}
-		
-		public boolean isActive() {
-			return this.active;
-		}
-		
-		public String toString() {
-			return shortName + " " + longName + " " + values.toString();
-		}
+		return getValue("path");
 	}
 	
 }
