@@ -1,0 +1,3 @@
+January 19th, 2018. Team Booyakashah
+
+Check out Chandan's detector class to make sure our components are compatible.
