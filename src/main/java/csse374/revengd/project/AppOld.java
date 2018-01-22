@@ -22,7 +22,7 @@ public class App {
 		ArrayList<IParserStrategy> defaultUMLStrategies = new ArrayList<>();
 		if(config.hasArg("sd")) {
 			builder = new SequenceDiagramBuilder();
-			defaultUMLStrategies.add(new SequenceDiagramParserStrategy("main", 2));
+			defaultUMLStrategies.add(new SequenceDiagramParserStrategy("main", 5));
 		}
 		else{
 			builder = new PlantUMLBuilder(true);
