@@ -17,13 +17,13 @@ public class App {
     	
     	Configuration config = new Configuration(args);
 
-		List<String> strategies = new ArrayList<>();
-		List<String> filters = new ArrayList<>();
-		List<String> detectors = new ArrayList<>();
+		List<String> strategies = config.getStrategies();
+		List<String> filters = config.getFilters();
+		List<String> detectors = config.getDetectors();
 
 		List<IParserStrategy> UMLStrategies = new ArrayList<>();
 
-		if(config.isSequence()){
+		if(config.isSequenceDiagram()){
 			String command = config.getCommand();
 			try {
 				Class clazz = Class.forName(command);
@@ -109,19 +109,21 @@ public class App {
 
 		IBuilder builder;
 		try {
-			Class clazz = Class.forName(config.getBuilder());
+			Class clazz = Class.forName(config.getBuilders().get(0));
 			if(clazz.isAssignableFrom(IBuilder.class)){
 				builder = (IBuilder) clazz.getConstructor(boolean.class).newInstance(true);
 			}
 			else{
-				System.out.println("Given builder " + config.getBuilder() + " is not a valid builder");
+				System.out.println("Given builder " + clazz.getName() + " is not a valid builder");
 				return;
 			}
 		}
 		catch(Exception e){
-			System.out.println("Could not create builder " + config.getBuilder());
+			System.out.println("Could not create builder " + config.getBuilders().get(0));
 			return;
 		}
+
+		IDisplayer displayer = new PlantDisplayer();
 
 		Runner runner = new Runner(parser, builder, displayer);
 

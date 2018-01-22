@@ -94,7 +94,11 @@ public class Configuration {
 	public List<String> getClasses() {
 		return getValues("classes");
 	}
-	
+
+	public List<String> getDetectors() {
+		return getValues("detectors");
+	}
+
 	public List<String> getBuilders() {
 		if(isSequenceDiagram) {
 			return Arrays.asList("PlantSequenceBuilder");
@@ -120,5 +124,7 @@ public class Configuration {
 	public String getPath() {
 		return getValue("path");
 	}
+
+	public boolean isSequenceDiagram(){ return isSequenceDiagram; }
 	
 }

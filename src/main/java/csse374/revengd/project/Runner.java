@@ -22,7 +22,7 @@ public class Runner {
         this.displayer = displayer;
     }
 
-    public void run(String[] classes){
+    public void run(List<String> classes){
         List<IUMLObject> objects = new ArrayList<>();
 
         for(String c : classes){
