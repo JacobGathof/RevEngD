@@ -162,4 +162,4 @@ RevEngD.iml
 .idea
 
 #local property files
-*.prop
+settings/default.prop
