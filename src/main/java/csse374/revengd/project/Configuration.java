@@ -45,6 +45,10 @@ public class Configuration {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
+		
+		if(parameters.get("command") != null) {
+			isSequenceDiagram = true;
+		}
 	}
 	
 	private void parseComandLine(String[] args) {
@@ -68,16 +72,13 @@ public class Configuration {
 			if(line.length() < 2)
 				continue;
 			String args[] = line.split("=");
-			if(args.length != 2) 
-				continue;
+			if(args.length == 1) { 
+				parameters.put(args[0].trim().toLowerCase(), null);
+			}
 			
 			String key = args[0].trim().toLowerCase();
 			String vals[] = args[1].trim().replace(" ", "").split(",");	
 			parameters.put(key, Arrays.asList(vals));
-		}
-		
-		if(parameters.get("command") != null && !parameters.get("command").isEmpty()) {
-			isSequenceDiagram = true;
 		}
 		
 		printParameters();
