@@ -74,6 +74,7 @@ public class Configuration {
 			String args[] = line.split("=");
 			if(args.length == 1) { 
 				parameters.put(args[0].trim().toLowerCase(), null);
+				continue;
 			}
 			
 			String key = args[0].trim().toLowerCase();
@@ -88,7 +89,7 @@ public class Configuration {
 	
 	private void printParameters() {
 		for(String s : parameters.keySet()) {
-			System.out.println("" + s + " -- " + parameters.get(s).toString());
+			System.out.println("" + s + " -- " + parameters.get(s));
 		}
 	}
 	
