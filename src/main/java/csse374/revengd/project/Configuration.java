@@ -105,8 +105,12 @@ public class Configuration {
 		return ls.get(0);
 	}
 	
-	public String getCommand() {
-		return getValue("command"); 
+	public List<String> getCommands() {
+		return getValues("command");
+	}
+
+	public String getAggregate(){
+		return getValue("aggregate");
 	}
 	
 	public List<String> getClasses() {
@@ -221,22 +225,62 @@ public class Configuration {
 		List<IParserStrategy> UMLStrategies = new ArrayList<>();
 		
 		if(isSequenceDiagram()){
-			String command = getCommand();
-			try {
-				Class clazz = Class.forName(command);
-				if (ISDContextResolutionCommand.class.isAssignableFrom(clazz)) {
-					ISDContextResolutionCommand comm = (ISDContextResolutionCommand) clazz.newInstance();
-					UMLStrategies.add(new SequenceDiagramParserStrategy("main", 2, comm));
-				}else {
-					System.out.println("Given strategy " + command + " is not a valid command");
-					System.exit(0);
+			List<String> commands = getCommands();
+			if(commands.size() == 1) {
+				String command = commands.get(0);
+				try {
+					Class clazz = Class.forName(command);
+					if (ISDContextResolutionCommand.class.isAssignableFrom(clazz)) {
+						ISDContextResolutionCommand comm = (ISDContextResolutionCommand) clazz.newInstance();
+						UMLStrategies.add(new SequenceDiagramParserStrategy("main", 2, comm));
+					} else {
+						System.out.println("Given strategy " + command + " is not a valid command");
+						System.exit(0);
+					}
+				} catch (InstantiationException e) {
+					System.out.println("Could not instantiate class " + command);
+				} catch (IllegalAccessException e) {
+					System.out.println("Could not access class " + command);
+				} catch (ClassNotFoundException e) {
+					System.out.println("Could not find class " + command);
 				}
-			} catch (InstantiationException e) {
-				System.out.println("Could not instantiate class " + command);
-			} catch (IllegalAccessException e) {
-				System.out.println("Could not access class " + command);
-			} catch (ClassNotFoundException e) {
-				System.out.println("Could not find class " + command);
+			}
+			else if(commands.size() > 1 && getAggregate() != null){
+				List<ISDContextResolutionCommand> instantiatedCommands = new ArrayList<>();
+				for(String command : commands) {
+					try {
+						Class clazz = Class.forName(command);
+						if (ISDContextResolutionCommand.class.isAssignableFrom(clazz)) {
+							ISDContextResolutionCommand comm = (ISDContextResolutionCommand) clazz.newInstance();
+							instantiatedCommands.add(comm);
+						} else {
+							System.out.println("Given strategy " + command + " is not a valid command");
+							System.exit(0);
+						}
+					} catch (InstantiationException e) {
+						System.out.println("Could not instantiate class " + command);
+					} catch (IllegalAccessException e) {
+						System.out.println("Could not access class " + command);
+					} catch (ClassNotFoundException e) {
+						System.out.println("Could not find class " + command);
+					}
+				}
+				try {
+					Class clazz = Class.forName(getAggregate());
+					if (ISDContextResolutionCommand.class.isAssignableFrom(clazz)) {
+						ISDContextResolutionCommand agg = (ISDContextResolutionCommand) clazz.getConstructor(List.class).newInstance(instantiatedCommands);
+						UMLStrategies.add(new SequenceDiagramParserStrategy("main", 2, agg));
+					} else {
+						System.out.println("Given command " + getAggregate() + " is not a valid command");
+						System.exit(0);
+					}
+				} catch (Exception e) {
+					System.out.println("Could not instantiate class " + getAggregate());
+				}
+			}
+			else{
+				System.out.println("Given sequence diagram parameters are not valid");
+				System.exit(0);
 			}
 		}
 		else {
