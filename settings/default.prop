@@ -1,7 +1,7 @@
 path=C:\\
 classes=Java.string, Java.lang
-filters=NonRecursiveParserFilter
-strategies=SequenceDiagramParserStrategy
-builder=SequenceDiagramBuilder
-displayer=PlantDisplayer
-commands=NullContextResolutionCommand
+filters=csse374.revengd.project.parsers.NonRecursiveParserFilter
+strategies=csse374.revengd.project.parserstrategies.SequenceDiagramParserStrategy
+builder=csse374.revengd.project.builder.SequenceDiagramBuilder
+displayer=csse374.revengd.project.displayer.PlantDisplayer
+commands=csse374.revengd.project.parserstrategies.resolutioncommands.CallGraphContextResolutionCommand
