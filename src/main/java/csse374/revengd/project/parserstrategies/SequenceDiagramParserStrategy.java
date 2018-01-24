@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import csse374.revengd.project.parserstrategies.resolutioncommands.CallGraphContextResolutionCommand;
 import csse374.revengd.project.parserstrategies.resolutioncommands.FirstContextResolutionCommand;
 import csse374.revengd.project.parserstrategies.resolutioncommands.ISDContextResolutionCommand;
 import csse374.revengd.project.parserstrategies.resolutioncommands.NullContextResolutionCommand;
@@ -19,15 +20,22 @@ import soot.PackManager;
 import soot.Scene;
 import soot.SootClass;
 import soot.SootMethod;
+import soot.SootMethodRef;
+import soot.Type;
 import soot.Unit;
+import soot.UnitBox;
 import soot.Value;
+import soot.ValueBox;
+import soot.JastAddJ.AssignExpr;
 import soot.baf.internal.BNewInst;
 import soot.baf.internal.BSpecialInvokeInst;
 import soot.baf.internal.BStaticInvokeInst;
 import soot.jimple.AssignStmt;
+import soot.jimple.InterfaceInvokeExpr;
 import soot.jimple.InvokeExpr;
 import soot.jimple.InvokeStmt;
 import soot.jimple.NewExpr;
+import soot.jimple.internal.JInterfaceInvokeExpr;
 import soot.jimple.toolkits.callgraph.CallGraph;
 import soot.jimple.toolkits.callgraph.ContextSensitiveCallGraph;
 import soot.jimple.toolkits.callgraph.Edge;
@@ -39,13 +47,13 @@ public class SequenceDiagramParserStrategy implements IParserStrategy {
 
 	private String startMethodName;
 	private int depthToLook;
-	private ISDContextResolutionCommand resolveCommand = new NullContextResolutionCommand();// = new FirstContextResolutionCommand();
+	private ISDContextResolutionCommand resolveCommand = new CallGraphContextResolutionCommand();// = new FirstContextResolutionCommand();
 	
 	
-	public SequenceDiagramParserStrategy (String methodName, int aDepthToLook, ISDContextResolutionCommand command){
+	public SequenceDiagramParserStrategy (String methodName, int aDepthToLook/*, ISDContextResolutionCommand command*/){
 		startMethodName = methodName;
 		depthToLook = aDepthToLook;
-		resolveCommand = command;
+		//resolveCommand = command;
 	}
 	@Override
 	public List<IUMLObject> parse(SootClass clazz, List<SootClass> dependencies, Scene v) {
@@ -69,24 +77,104 @@ public class SequenceDiagramParserStrategy implements IParserStrategy {
 	private List<IUMLObject> examine(CallGraph g, SootMethod rootMethod, SootClass callingClass,  Scene v, int remainingDepth){
 		List<IUMLObject> examinationList = new ArrayList<>();
 		Iterator<MethodOrMethodContext> children;
-		if (rootMethod.hasActiveBody()){
+		Iterator<Edge> testing;
+		//if (rootMethod.hasActiveBody()){
 			if (remainingDepth == 0){
 				return new ArrayList<>();
 			}
 			children = new Targets(g.edgesOutOf(rootMethod));
+			testing = g.edgesOutOf(rootMethod);
+			while(testing.hasNext()){
+				Edge e = testing.next();
+				Unit asdf = e.srcUnit();
+				/*List<ValueBox> wut = asdf.getDefBoxes();
+				List<UnitBox> wut1 = asdf.getUnitBoxes();
+				List<ValueBox> wut2 = asdf.getUseBoxes();
+				List<ValueBox> wut3 = asdf.getUseAndDefBoxes();
+				MethodOrMethodContext testSrc = e.getSrc();
+				MethodOrMethodContext testInt = e.src();
+				MethodOrMethodContext test2 = e.tgt();*/
+				if (e != null && e.srcUnit() != null){
+					List<ValueBox> plz = e.srcUnit().getUseBoxes();
+					for(int i = 0; i < plz.size(); i++){
+						SootMethod method = null;
+						
+						
+						ValueBox a = plz.get(i);
+						Value z = a.getValue();
+						
+						//if(z instanceof JAbstractInvokeExpr)
+						
+						if(z instanceof InvokeExpr){
+							InvokeExpr x = (InvokeExpr) z;
+							method = x.getMethod();
+							
+						}
+						if(z instanceof JInterfaceInvokeExpr){
+							JInterfaceInvokeExpr x = (JInterfaceInvokeExpr) z;
+							method = x.getMethod();
+							List<SootMethod> resolved = resolveCommand.resolve(g, method, method.getDeclaringClass(), v);
+							if (!resolved.isEmpty()){
+								method = resolved.get(0);
+							}
+							//method = 
+							//method = x.getMethod();
+							
+							//SootMethodRef plasdf = x.getMethodRef();
+							//String afds = "";
+						}
+						if(z instanceof AssignStmt){
+							Value x = ((AssignStmt) z).getRightOp();
+							if (x instanceof AssignStmt){
+								InvokeExpr invkExpr = (InvokeExpr)x;
+								method = invkExpr.getMethod();
+							}
+							
+						}
+						if (method != null && method.hasActiveBody()){
+						examinationList.add(new SequenceMethodUMLObject(callingClass, method));
+						examinationList.addAll(examine(g, method, method.getDeclaringClass(), v, remainingDepth - 1));
+						examinationList.add(new ReturnUMLObject(callingClass, method));
+						} else if (method != null){
+							resolveCommand.resolve(g, method, method.getDeclaringClass(), v);
+						}
+	
+						
+	//					if(stmt instanceof AssignStmt) {
+	//						// If a method returns a value, then we should look for AssignStmt whose right hand side is InvokeExpr
+	//						Value rightOp = ((AssignStmt) stmt).getRightOp();
+	//						if(rightOp instanceof InvokeExpr) {
+	//							InvokeExpr invkExpr = (InvokeExpr)rightOp;
+	//							SootMethod method = invkExpr.getMethod();				
+	//						}
+	//					}
+						
+						//LinkedRValue aasdfaw = (LinkedRValue) a;
+						Type grr = a.getValue().getType();
+						a.getClass();
+						String adsdfasdf = "";
+						
+					}
+				}
+//				MethodOrMethodContext testTgt = e.getTgt();
+//				String DebugStopper = "lol";
+//				examinationList.add(new SequenceMethodUMLObject(callingClass, method));
+//				examinationList.addAll(examine(g, method, method.getDeclaringClass(), v, remainingDepth - 1));
+//				examinationList.add(new ReturnUMLObject(callingClass, method));
+			}
 
-			while(children.hasNext()){
+			/*while(children.hasNext()){
 				SootMethod aChild = (SootMethod) children.next();
 				examinationList.add(new SequenceMethodUMLObject(callingClass, aChild));
 				examinationList.addAll(examine(g, aChild, aChild.getDeclaringClass(), v, remainingDepth - 1));
 				examinationList.add(new ReturnUMLObject(callingClass, aChild));
-			}
-		}
-		else {
+			}*/
+		//}
+		/*else {
 			List<SootMethod> concMethods = resolveCommand.resolve(g, rootMethod, callingClass, v);
 			for(int i = 0; i < concMethods.size(); i++){
 				this.examine(g, concMethods.get(i), callingClass, v, remainingDepth);
-			}
+			}*/
 			/*Hierarchy hierarchy = v.getActiveHierarchy();
 			  List<SootMethod> possibleMethods = hierarchy.resolveAbstractDispatch(rootMethod.getDeclaringClass(), rootMethod);
 			  for(int i = 0; i < possibleMethods.size(); i++){
@@ -95,7 +183,7 @@ public class SequenceDiagramParserStrategy implements IParserStrategy {
 					  break;
 				  }
 			  }*/
-		}
+		//}
 		return examinationList;
 	}
 }
