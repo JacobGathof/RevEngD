@@ -60,7 +60,7 @@ public class Configuration {
 			parameters.put(key, Arrays.asList(vals));
 		}
 		
-		if(parameters.get("commands") != null && !parameters.get("commands").isEmpty()) {
+		if(parameters.get("command") != null && !parameters.get("command").isEmpty()) {
 			isSequenceDiagram = true;
 		}
 		
@@ -114,10 +114,12 @@ public class Configuration {
 
 	public IParser applyDetectors(IParser parser) {
 		
-		for(String detector : getValues("detectors")){
+		List<String> det = getValues("detectors");
+		if(det == null) return parser;
+		for(String detector : det){
 			try {
 				Class clazz = Class.forName(detector);
-				if(clazz.isAssignableFrom(IParserDetector.class)){
+				if(IParserDetector.class.isAssignableFrom(clazz)){
 					parser = (IParserFilter) clazz.getConstructor(IParser.class).newInstance(parser);
 				}
 				else{
@@ -143,8 +145,11 @@ public class Configuration {
 		IBuilder builder = null;
 		try {
 			Class clazz = Class.forName(getValue("builder"));
-			if(clazz.isAssignableFrom(IBuilder.class)){
-				builder = (IBuilder) clazz.getConstructor(boolean.class).newInstance(true);
+			if(IBuilder.class.isAssignableFrom(clazz)){
+				if(isSequenceDiagram)
+					builder = (IBuilder) clazz.newInstance();
+				else
+					builder = (IBuilder) clazz.getConstructor(boolean.class).newInstance(true);
 			}
 			else{
 				System.out.println("Given builder " + clazz.getName() + " is not a valid builder");
@@ -171,7 +176,7 @@ public class Configuration {
 		for(String filter : getValues("filters")){
 			try {
 				Class clazz = Class.forName(filter);
-				if(clazz.isAssignableFrom(IParserFilter.class)){
+				if(IParserFilter.class.isAssignableFrom(clazz)){
 					parser = (IParserFilter) clazz.getConstructor(IParser.class).newInstance(parser);
 				}
 				else{
@@ -194,33 +199,17 @@ public class Configuration {
 	
 	public List<IParserStrategy> getStrategies() {
 		List<IParserStrategy> UMLStrategies = new ArrayList<>();
-		for (String strategy : getValues("strategies")) {
-			try {
-				Class clazz = Class.forName(strategy);
-				if (clazz.isAssignableFrom(IParserStrategy.class)) {
-					IParserStrategy strat = (IParserStrategy) clazz.newInstance();
-					UMLStrategies.add(strat);
-				}
-				else{
-					System.out.println("Given strategy " + strategy + " is not a valid strategy");
-					System.exit(0);
-				}
-			} catch (InstantiationException e) {
-				System.out.println("Could not instantiate class " + strategy);
-			} catch (IllegalAccessException e) {
-				System.out.println("Could not access class " + strategy);
-			} catch (ClassNotFoundException e) {
-				System.out.println("Could not find class " + strategy);
-			}
-		}
 		
 		if(isSequenceDiagram()){
 			String command = getCommand();
 			try {
 				Class clazz = Class.forName(command);
-				if (clazz.isAssignableFrom(ISDContextResolutionCommand.class)) {
+				if (ISDContextResolutionCommand.class.isAssignableFrom(clazz)) {
 					ISDContextResolutionCommand comm = (ISDContextResolutionCommand) clazz.newInstance();
 					UMLStrategies.add(new SequenceDiagramParserStrategy("main", 2, comm));
+				}else {
+					System.out.println("Given strategy " + command + " is not a valid command");
+					System.exit(0);
 				}
 			} catch (InstantiationException e) {
 				System.out.println("Could not instantiate class " + command);
@@ -231,6 +220,25 @@ public class Configuration {
 			}
 		}
 		else {
+			for (String strategy : getValues("strategies")) {
+				try {
+					Class clazz = Class.forName(strategy);
+					if (IParserStrategy.class.isAssignableFrom(clazz)) {
+						IParserStrategy strat = (IParserStrategy) clazz.newInstance();
+						UMLStrategies.add(strat);
+					}
+					else{
+						System.out.println("Given strategy " + strategy + " is not a valid strategy");
+						System.exit(0);
+					}
+				} catch (InstantiationException e) {
+					System.out.println("Could not instantiate class " + strategy);
+				} catch (IllegalAccessException e) {
+					System.out.println("Could not access class " + strategy);
+				} catch (ClassNotFoundException e) {
+					System.out.println("Could not find class " + strategy);
+				}
+			}
 			
 		}
 		
