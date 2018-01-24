@@ -163,7 +163,22 @@ public class Configuration {
 	}
 	
 	public IDisplayer getDisplayer() {
-		return new PlantDisplayer();
+		IDisplayer displayer = null;
+		try {
+			Class clazz = Class.forName(getValue("displayer"));
+			if(IDisplayer.class.isAssignableFrom(clazz)){
+				displayer = (IDisplayer) clazz.newInstance();
+			}
+			else{
+				System.out.println("Given displayer " + clazz.getName() + " is not a valid displayer");
+				System.exit(0);
+			}
+		}
+		catch(Exception e){
+			System.out.println("Could not create displayer " + getValue("displayer"));
+			System.exit(0);
+		}
+		return displayer;
 	}
 	
 	public List<String> getFilters() {
