@@ -9,6 +9,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import csse374.revengd.project.builder.IBuilder;
+import csse374.revengd.project.displayer.IDisplayer;
+import csse374.revengd.project.displayer.PlantDisplayer;
+import csse374.revengd.project.parsers.IParser;
+import csse374.revengd.project.parsers.IParserDetector;
+import csse374.revengd.project.parsers.IParserFilter;
+import csse374.revengd.project.parserstrategies.IParserStrategy;
+import csse374.revengd.project.parserstrategies.SequenceDiagramParserStrategy;
+import csse374.revengd.project.parserstrategies.resolutioncommands.ISDContextResolutionCommand;
+
 
 public class Configuration {
 	
@@ -95,30 +105,129 @@ public class Configuration {
 		return getValues("classes");
 	}
 
-	public List<String> getDetectors() {
-		return getValues("detectors");
+	public IParser applyDetectors(IParser parser) {
+		
+		for(String detector : getValues("detectors")){
+			try {
+				Class clazz = Class.forName(detector);
+				if(clazz.isAssignableFrom(IParserDetector.class)){
+					parser = (IParserFilter) clazz.getConstructor(IParser.class).newInstance(parser);
+				}
+				else{
+					System.out.println("Given detector " + detector + " is not a valid detector");
+					System.exit(0);
+				}
+			}
+			catch (IllegalAccessException e){
+				System.out.println("Could not access class " + detector);
+			}
+			catch (ClassNotFoundException e){
+				System.out.println("Could not find class " + detector);
+			}
+			catch(Exception e){
+				System.out.println("Could not instantiate class " + detector);
+			}
+		}
+		return parser;
 	}
 
-	public List<String> getBuilders() {
-		if(isSequenceDiagram) {
-			return Arrays.asList("PlantSequenceBuilder");
+	public IBuilder getBuilder() {
+		
+		IBuilder builder = null;
+		try {
+			Class clazz = Class.forName(getValue("builders"));
+			if(clazz.isAssignableFrom(IBuilder.class)){
+				builder = (IBuilder) clazz.getConstructor(boolean.class).newInstance(true);
+			}
+			else{
+				System.out.println("Given builder " + clazz.getName() + " is not a valid builder");
+				System.exit(0);
+			}
 		}
-		return Arrays.asList("PlantUMLBuilder");
+		catch(Exception e){
+			System.out.println("Could not create builder " + getValue("builders"));
+			System.exit(0);
+		}
+		return builder;
+		
 	}
 	
-	public List<String> getDisplayers() {
-		if(isSequenceDiagram) {
-			return Arrays.asList("PlantSequenceBuilder");
-		}
-		return Arrays.asList("PlantUMLBuilder");
+	public IDisplayer getDisplayer() {
+		return new PlantDisplayer();
 	}
 	
 	public List<String> getFilters() {
 		return getValues("filters");
 	}
 	
-	public List<String> getStrategies() {
-		return getValues("strategies");
+	public IParser applyFilters(IParser parser) {
+		for(String filter : getValues("filters")){
+			try {
+				Class clazz = Class.forName(filter);
+				if(clazz.isAssignableFrom(IParserFilter.class)){
+					parser = (IParserFilter) clazz.getConstructor(IParser.class).newInstance(parser);
+				}
+				else{
+					System.out.println("Given filter " + filter + " is not a valid filter");
+					System.exit(0);
+				}
+			}
+			catch (IllegalAccessException e){
+				System.out.println("Could not access class " + filter);
+			}
+			catch (ClassNotFoundException e){
+				System.out.println("Could not find class " + filter);
+			}
+			catch(Exception e){
+				System.out.println("Could not instantiate class " + filter);
+			}
+		}
+		return parser;
+	}
+	
+	public List<IParserStrategy> getStrategies() {
+		List<IParserStrategy> UMLStrategies = new ArrayList<>();
+		for (String strategy : getValues("strategies")) {
+			try {
+				Class clazz = Class.forName(strategy);
+				if (clazz.isAssignableFrom(IParserStrategy.class)) {
+					IParserStrategy strat = (IParserStrategy) clazz.newInstance();
+					UMLStrategies.add(strat);
+				}
+				else{
+					System.out.println("Given strategy " + strategy + " is not a valid strategy");
+					System.exit(0);
+				}
+			} catch (InstantiationException e) {
+				System.out.println("Could not instantiate class " + strategy);
+			} catch (IllegalAccessException e) {
+				System.out.println("Could not access class " + strategy);
+			} catch (ClassNotFoundException e) {
+				System.out.println("Could not find class " + strategy);
+			}
+		}
+		
+		if(isSequenceDiagram()){
+			String command = getCommand();
+			try {
+				Class clazz = Class.forName(command);
+				if (clazz.isAssignableFrom(ISDContextResolutionCommand.class)) {
+					ISDContextResolutionCommand comm = (ISDContextResolutionCommand) clazz.newInstance();
+					UMLStrategies.add(new SequenceDiagramParserStrategy("main", 2, comm));
+				}
+			} catch (InstantiationException e) {
+				System.out.println("Could not instantiate class " + command);
+			} catch (IllegalAccessException e) {
+				System.out.println("Could not access class " + command);
+			} catch (ClassNotFoundException e) {
+				System.out.println("Could not find class " + command);
+			}
+		}
+		else {
+			
+		}
+		
+		return UMLStrategies;
 	}
 	
 	public String getPath() {
