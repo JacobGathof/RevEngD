@@ -25,23 +25,39 @@ import csse374.revengd.project.parserstrategies.resolutioncommands.ISDContextRes
 public class Configuration {
 	
 	private Map<String, List<String>> parameters;
-	private final List<String> requiredParameters = Arrays.asList();
 	private boolean isSequenceDiagram;
-	private String defaultFile = "/home/trevor/IdeaProjects/RevEngD/settings/default.prop";
-	
+
+	private String defaultFile = Paths.get(System.getProperty("user.dir"), "settings", "default.prop").toString();
+
 	public Configuration(String[] args) {
 		
 		isSequenceDiagram = false;
 		parameters = new HashMap<String, List<String>>();		
 		try {
-			if(args.length == 0) {
-				parseSettingsFile(Paths.get(defaultFile).toString());
-			}else {
+			parseDefaultSettings();
+			if(args.length > 0) {
 				parseSettingsFile(args[0]);
 			}
+			if(args.length > 1) {
+				parseComandLine(args);
+			}
+			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private void parseComandLine(String[] args) {
+		for(int i = 1; i < args.length; i++) {
+			String[] arg = args[i].split("=");
+			String key = arg[0].trim().toLowerCase();
+			String vals[] = arg[1].trim().replace(" ", "").split(",");
+			parameters.put(key, Arrays.asList(vals));
+		}
+	}
+	
+	private void parseDefaultSettings() throws FileNotFoundException {
+		parseSettingsFile(defaultFile);
 	}
 	
 	private void parseSettingsFile(String filename) throws FileNotFoundException {
@@ -66,10 +82,6 @@ public class Configuration {
 		
 		printParameters();
 		
-		if(!checkRequiredArguments()) {
-			System.exit(0);
-		}
-		
 		scan.close();
 	}
 	
@@ -79,19 +91,6 @@ public class Configuration {
 		}
 	}
 	
-	
-	private boolean checkRequiredArguments() {
-		if(parameters.keySet().containsAll(requiredParameters))
-			return true;
-		List<String> missing = new ArrayList<>();
-		for(String s : requiredParameters) {
-			if(!parameters.containsKey(s)) {
-				missing.add(s);
-			}
-		}
-		System.err.println("Missing : " + missing.toString());
-		return false;
-	}
 
 	public List<String> getValues(String s) {
 		return parameters.get(s);
@@ -165,7 +164,22 @@ public class Configuration {
 	}
 	
 	public IDisplayer getDisplayer() {
-		return new PlantDisplayer();
+		IDisplayer displayer = null;
+		try {
+			Class clazz = Class.forName(getValue("displayer"));
+			if(IDisplayer.class.isAssignableFrom(clazz)){
+				displayer = (IDisplayer) clazz.newInstance();
+			}
+			else{
+				System.out.println("Given displayer " + clazz.getName() + " is not a valid displayer");
+				System.exit(0);
+			}
+		}
+		catch(Exception e){
+			System.out.println("Could not create displayer " + getValue("displayer"));
+			System.exit(0);
+		}
+		return displayer;
 	}
 	
 	public List<String> getFilters() {
@@ -173,6 +187,10 @@ public class Configuration {
 	}
 	
 	public IParser applyFilters(IParser parser) {
+		
+		List<String> filt = getValues("filters");
+		if(filt == null) return parser;
+		
 		for(String filter : getValues("filters")){
 			try {
 				Class clazz = Class.forName(filter);
@@ -220,7 +238,11 @@ public class Configuration {
 			}
 		}
 		else {
-			for (String strategy : getValues("strategies")) {
+			
+			List<String> str = getValues("strategies");
+			if(str == null) return UMLStrategies;
+			
+			for (String strategy : str) {
 				try {
 					Class clazz = Class.forName(strategy);
 					if (IParserStrategy.class.isAssignableFrom(clazz)) {
