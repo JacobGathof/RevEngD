@@ -12,8 +12,8 @@ public class App {
     public static void main(String[] args){
         Configuration config = new Configuration(args);
         List<IParserStrategy> strategies = config.getStrategies();
-        IBuilder builder = config.getBuilders();
-        IDisplayer displayer = config.getDisplayers();
+        IBuilder builder = config.getBuilder();
+        IDisplayer displayer = config.getDisplayer();
         IParser parser = new MasterParser(config.getPath(), strategies);
         parser = config.applyFilters(parser);
         parser = config.applyDetectors(parser);

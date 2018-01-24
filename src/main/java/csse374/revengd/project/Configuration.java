@@ -27,7 +27,7 @@ public class Configuration {
 	private Map<String, List<String>> parameters;
 	private final List<String> requiredParameters = Arrays.asList();
 	private boolean isSequenceDiagram;
-	private String defaultFile = "C:\\Users\\gathofjd\\git\\SoftDesignProject\\settings\\default.prop";
+	private String defaultFile = "/home/trevor/IdeaProjects/RevEngD/settings/default.prop";
 	
 	public Configuration(String[] args) {
 		
