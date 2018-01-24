@@ -55,7 +55,7 @@ public class Configuration {
 		for(int i = 1; i < args.length; i++) {
 			String[] arg = args[i].split("=");
 			String key = arg[0].trim().toLowerCase();
-			String vals[] = arg[1].trim().replace(" ", "").split(",");
+			String vals[] = arg[1].trim().split(",");
 			parameters.put(key, Arrays.asList(vals));
 		}
 	}
@@ -78,7 +78,7 @@ public class Configuration {
 			}
 			
 			String key = args[0].trim().toLowerCase();
-			String vals[] = args[1].trim().replace(" ", "").split(",");	
+			String vals[] = args[1].trim().split(",");	
 			parameters.put(key, Arrays.asList(vals));
 		}
 		

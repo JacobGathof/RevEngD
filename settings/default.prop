@@ -1,4 +1,5 @@
-path=/home/trevor/IdeaProjects/RevEngD/build/classes/main
+path=C:/Users/mcclarjp/Documents/CSSE 374/Programs/Project/RevEngD/build/classes/main
+filters=csse374.revengd.project.parsers.PackageParserFilter
 classes=csse374.revengd.project.App
 strategies=csse374.revengd.project.parserstrategies.SequenceDiagramParserStrategy
 builder=csse374.revengd.project.builder.SequenceDiagramBuilder
