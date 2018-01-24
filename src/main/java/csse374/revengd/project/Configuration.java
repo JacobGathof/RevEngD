@@ -2,6 +2,8 @@ package csse374.revengd.project;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -25,13 +27,18 @@ public class Configuration {
 	private Map<String, List<String>> parameters;
 	private final List<String> requiredParameters = Arrays.asList();
 	private boolean isSequenceDiagram;
+	private String defaultFile = "C:\\Users\\gathofjd\\git\\SoftDesignProject\\settings\\default.prop";
 	
 	public Configuration(String[] args) {
 		
 		isSequenceDiagram = false;
 		parameters = new HashMap<String, List<String>>();		
 		try {
-			parseSettingsFile(args[0]);
+			if(args.length == 0) {
+				parseSettingsFile(Paths.get(defaultFile).toString());
+			}else {
+				parseSettingsFile(args[0]);
+			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -98,7 +105,7 @@ public class Configuration {
 	}
 	
 	public String getCommand() {
-		return getValue("command");
+		return getValue("command"); 
 	}
 	
 	public List<String> getClasses() {
@@ -135,7 +142,7 @@ public class Configuration {
 		
 		IBuilder builder = null;
 		try {
-			Class clazz = Class.forName(getValue("builders"));
+			Class clazz = Class.forName(getValue("builder"));
 			if(clazz.isAssignableFrom(IBuilder.class)){
 				builder = (IBuilder) clazz.getConstructor(boolean.class).newInstance(true);
 			}
@@ -145,7 +152,7 @@ public class Configuration {
 			}
 		}
 		catch(Exception e){
-			System.out.println("Could not create builder " + getValue("builders"));
+			System.out.println("Could not create builder " + getValue("builder"));
 			System.exit(0);
 		}
 		return builder;
