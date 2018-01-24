@@ -7,6 +7,7 @@ import java.util.List;
 
 import csse374.revengd.project.parserstrategies.resolutioncommands.CallGraphContextResolutionCommand;
 import csse374.revengd.project.parserstrategies.resolutioncommands.FirstContextResolutionCommand;
+import csse374.revengd.project.parserstrategies.resolutioncommands.HierarchyContextResolutionCommand;
 import csse374.revengd.project.parserstrategies.resolutioncommands.ISDContextResolutionCommand;
 import csse374.revengd.project.parserstrategies.resolutioncommands.NullContextResolutionCommand;
 import csse374.revengd.project.umlobjects.IUMLObject;
@@ -47,10 +48,12 @@ public class SequenceDiagramParserStrategy implements IParserStrategy {
 
 	private String startMethodName;
 	private int depthToLook;
-	private ISDContextResolutionCommand resolveCommand = new CallGraphContextResolutionCommand();// = new FirstContextResolutionCommand();
+	//private ISDContextResolutionCommand resolveCommand = new CallGraphContextResolutionCommand();
+	private ISDContextResolutionCommand resolveCommand = new HierarchyContextResolutionCommand();
+	//private ISDContextResolutionCommand resolveCommand = new FirstContextResolutionCommand();
 	
 	
-	public SequenceDiagramParserStrategy (String methodName, int aDepthToLook/*, ISDContextResolutionCommand command*/){
+	public SequenceDiagramParserStrategy (String methodName, int aDepthToLook, ISDContextResolutionCommand command){
 		startMethodName = methodName;
 		depthToLook = aDepthToLook;
 		//resolveCommand = command;
