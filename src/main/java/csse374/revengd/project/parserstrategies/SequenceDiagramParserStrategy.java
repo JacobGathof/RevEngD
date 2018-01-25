@@ -36,7 +36,13 @@ import soot.jimple.InterfaceInvokeExpr;
 import soot.jimple.InvokeExpr;
 import soot.jimple.InvokeStmt;
 import soot.jimple.NewExpr;
+import soot.jimple.SpecialInvokeExpr;
+import soot.jimple.VirtualInvokeExpr;
+import soot.jimple.internal.AbstractInstanceInvokeExpr;
+import soot.jimple.internal.AbstractInterfaceInvokeExpr;
 import soot.jimple.internal.JInterfaceInvokeExpr;
+import soot.jimple.internal.JSpecialInvokeExpr;
+import soot.jimple.internal.JVirtualInvokeExpr;
 import soot.jimple.toolkits.callgraph.CallGraph;
 import soot.jimple.toolkits.callgraph.ContextSensitiveCallGraph;
 import soot.jimple.toolkits.callgraph.Edge;
@@ -56,7 +62,7 @@ public class SequenceDiagramParserStrategy implements IParserStrategy {
 	public SequenceDiagramParserStrategy (String methodName, int aDepthToLook, ISDContextResolutionCommand command){
 		startMethodName = methodName;
 		depthToLook = aDepthToLook;
-		//resolveCommand = command;
+		resolveCommand = command;
 	}
 	@Override
 	public List<IUMLObject> parse(SootClass clazz, List<SootClass> dependencies, Scene v) {
@@ -113,8 +119,10 @@ public class SequenceDiagramParserStrategy implements IParserStrategy {
 							method = x.getMethod();
 							
 						}
-						if(z instanceof JInterfaceInvokeExpr){
-							JInterfaceInvokeExpr x = (JInterfaceInvokeExpr) z;
+						/*if(z instanceof AbstractInterfaceInvokeExpr || z instanceof AbstractInstanceInvokeExpr){
+						//if(z instanceof JInterfaceInvokeExpr || z instanceof JSpecialInvokeExpr || z instanceof JVirtualInvokeExpr){
+							//JInterfaceInvokeExpr x = (JInterfaceInvokeExpr) z;
+							InvokeExpr x = (InvokeExpr) z;
 							method = x.getMethod();
 							List<SootMethod> resolved = resolveCommand.resolve(g, method, method.getDeclaringClass(), v);
 							if (!resolved.isEmpty()){
@@ -125,7 +133,7 @@ public class SequenceDiagramParserStrategy implements IParserStrategy {
 							
 							//SootMethodRef plasdf = x.getMethodRef();
 							//String afds = "";
-						}
+						}*/
 						if(z instanceof AssignStmt){
 							Value x = ((AssignStmt) z).getRightOp();
 							if (x instanceof AssignStmt){
