@@ -4,19 +4,18 @@ import soot.SootClass;
 
 import java.util.List;
 
-public class StereotypeUMLObject implements IUMLObject{
+public class ColoredUMLObject implements IUMLObject {
     IUMLObject inner;
-    String stereotype;
+    String color;
 
-    public StereotypeUMLObject(IUMLObject inner, String stereotype){
+    public ColoredUMLObject(IUMLObject inner, String color){
         this.inner = inner;
-        this.stereotype = stereotype;
+        this.color = color;
     }
 
     @Override
     public String toUML(boolean full) {
-        String innerUML = inner.toUML(full);
-        return innerUML + " <<" + stereotype + ">>";
+        return inner.toUML(full) + " #" + color;
     }
 
     @Override

@@ -125,7 +125,7 @@ public class Configuration {
 			try {
 				Class clazz = Class.forName(detector);
 				if(IParserDetector.class.isAssignableFrom(clazz)){
-					parser = (IParserFilter) clazz.getConstructor(IParser.class).newInstance(parser);
+					parser = (IParserDetector) clazz.getConstructor(IParser.class).newInstance(parser);
 				}
 				else{
 					System.out.println("Given detector " + detector + " is not a valid detector");

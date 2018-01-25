@@ -39,6 +39,9 @@ public class PlantUMLBuilder implements IBuilder {
     	
         StringBuilder builder = new StringBuilder();
         builder.append("@startuml\n");
+        builder.append("skinparam class {\n" +
+                "\tBorderColor<<Singleton>> blue\n" +
+                "}\n");
         
         for(String s : newObjSet) {
         	builder.append(s + "\n");

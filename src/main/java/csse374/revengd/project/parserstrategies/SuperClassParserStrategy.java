@@ -15,6 +15,9 @@ public class SuperClassParserStrategy implements IParserStrategy{
         if(clazz.isInterface()){
             umlObjects.add(new InterfaceUMLObject(clazz));
         }
+        else{
+            umlObjects.add(new ClassUMLObject(clazz));
+        }
 
         if(clazz.hasSuperclass()) {
             dependencies.add(clazz.getSuperclass());

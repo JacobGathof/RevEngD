@@ -1,4 +1,3 @@
--b -d
 path=/home/trevor/IdeaProjects/RevEngD/build/classes/main
 classes=csse374.revengd.project.App
 filters=csse374.revengd.project.parsers.PackageParserFilter
