@@ -32,7 +32,6 @@ public class BlacklistParserFilter implements IParserFilter {
 			boolean samePack = true;
 			
 			List<String> packages = obj.getPackage();
-			String cl = obj.getSootClass().getName();
 			
 			if (blacklist != null) {
 				for(String s : blacklist) {
@@ -45,7 +44,7 @@ public class BlacklistParserFilter implements IParserFilter {
 			}
 			if (whitelist != null) {
 				for (String ss : whitelist) {
-					if (cl.equals(ss)) {
+					if (obj.toUML(true).contains(ss)) {
 						samePack = true;
 					}
 				}
