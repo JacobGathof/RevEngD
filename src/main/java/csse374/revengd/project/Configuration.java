@@ -203,8 +203,9 @@ public class Configuration {
 	}
 	
 	public IParser applyFilters(IParser parser) {
-		parser = new RepeatParserFilter(parser);
-
+		if(!this.isSequenceDiagram()){
+			parser = new RepeatParserFilter(parser);
+		}
 		List<String> bl = getValues("blacklist");
 		List<String> wl = getValues("whitelist");
 		parser = new BlacklistParserFilter(parser, bl, wl);
