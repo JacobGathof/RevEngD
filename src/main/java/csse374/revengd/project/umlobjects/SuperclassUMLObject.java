@@ -20,10 +20,10 @@ public class SuperclassUMLObject implements IUMLObject {
     @Override
     public String toUML(boolean full) {
         if(full) {
-			return source.getName() + " <|-- " + target.getName();
+			return target.getName() + " <|-- " + source.getName();
 		}
 		else{
-			return source.getShortName() + " <|-- " + target.getShortName();
+			return target.getShortName() + " <|-- " + source.getShortName();
 		}
     }
 
