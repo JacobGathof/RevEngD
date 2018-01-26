@@ -1,16 +1,16 @@
-package csse374.revengd.project.parsers;
+package csse374.revengd.project.parsers.filters;
 
-import java.util.Arrays;
 import java.util.List;
 
-import csse374.revengd.project.Configuration;
+import csse374.revengd.project.parsers.IParser;
+import csse374.revengd.project.parsers.filters.IParserFilter;
 import csse374.revengd.project.umlobjects.IUMLObject;
 
-public class JDKParserFilter implements IParserFilter{
+public class PackageParserFilter implements IParserFilter {
 
     IParser parser;
 
-    public JDKParserFilter(IParser parser){
+    public PackageParserFilter(IParser parser){
         this.parser = parser;
     }
 
@@ -20,17 +20,14 @@ public class JDKParserFilter implements IParserFilter{
 
     public List<IUMLObject> parse(String className) {
     	List<IUMLObject> sootObjects = parser.parse(className);
-
 		for(int i = 0; i < sootObjects.size(); i++) {
 			IUMLObject obj = sootObjects.get(i);
-			String[] exclusions = new String[] {"java", "javax", "sun", "lang"};
+			String pack = className.split("\\.")[0];
 			boolean samePack = true;
 			List<String> packages = obj.getPackage();
 			for(String s : packages) {
-				for(String ss : exclusions) {
-					if(s.equals(ss)) {
-						samePack = false;
-					}
+				if(!s.equals(pack)) {
+					samePack = false;
 				}
 			}
 			if(!samePack) {

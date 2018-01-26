@@ -1,8 +1,9 @@
-package csse374.revengd.project.parsers;
+package csse374.revengd.project.parsers.filters;
 
 import java.util.List;
 
-import csse374.revengd.project.Configuration;
+import csse374.revengd.project.parsers.IParser;
+import csse374.revengd.project.parsers.filters.IParserFilter;
 import csse374.revengd.project.umlobjects.IUMLObject;
 import soot.Modifier;
 

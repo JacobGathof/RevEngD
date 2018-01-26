@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
+import csse374.revengd.project.parsers.filters.IParserFilter;
 import csse374.revengd.project.umlobjects.IUMLObject;
 import csse374.revengd.project.umlobjects.PackageHelper;
 
