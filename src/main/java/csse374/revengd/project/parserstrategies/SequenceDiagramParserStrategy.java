@@ -71,6 +71,7 @@ public class SequenceDiagramParserStrategy implements IParserStrategy {
 	    v.loadNecessaryClasses();
 	    
 	    PackManager.v().runPacks();
+	    
 	    CallGraph g = v.getCallGraph();
 
 		SootMethod startMethod = clazz.getMethodByName(startMethodName);
@@ -91,11 +92,19 @@ public class SequenceDiagramParserStrategy implements IParserStrategy {
 			if (remainingDepth == 0){
 				return new ArrayList<>();
 			}
+			
 			children = new Targets(g.edgesOutOf(rootMethod));
 			testing = g.edgesOutOf(rootMethod);
+			
+			List<Edge> IWantToSeeThis = new ArrayList<Edge>();
+			/*while(testing.hasNext()){
+				IWantToSeeThis.add(testing.next());
+			}
+			String breakp = "Breakpoint here";
+			*/
 			while(testing.hasNext()){
 				Edge e = testing.next();
-				Unit asdf = e.srcUnit();
+				//Unit asdf = e.srcUnit();
 				/*List<ValueBox> wut = asdf.getDefBoxes();
 				List<UnitBox> wut1 = asdf.getUnitBoxes();
 				List<ValueBox> wut2 = asdf.getUseBoxes();
@@ -104,18 +113,24 @@ public class SequenceDiagramParserStrategy implements IParserStrategy {
 				MethodOrMethodContext testInt = e.src();
 				MethodOrMethodContext test2 = e.tgt();*/
 				if (e != null && e.srcUnit() != null){
-					List<ValueBox> plz = e.srcUnit().getUseBoxes();
-					for(int i = 0; i < plz.size(); i++){
+					Unit unit = e.srcUnit();
+					Unit srcUnit = e.srcStmt();
+					MethodOrMethodContext comeon = e.getSrc();
+					MethodOrMethodContext plez = e.getTgt();
+					
+					List<ValueBox> vBoxes = unit.getUseBoxes();
+					//List<ValueBox> vBoxes = e.srcUnit().getUseBoxes();
+					for(int i = 0; i < vBoxes.size(); i++){
 						SootMethod method = null;
 						
 						
-						ValueBox a = plz.get(i);
-						Value z = a.getValue();
+						ValueBox a = vBoxes.get(i);
+						Value value = a.getValue();
 						
 						//if(z instanceof JAbstractInvokeExpr)
 						
-						if(z instanceof InvokeExpr){
-							InvokeExpr x = (InvokeExpr) z;
+						if(value instanceof InvokeExpr){
+							InvokeExpr x = (InvokeExpr) value;
 							method = x.getMethod();
 							
 						}
@@ -134,20 +149,37 @@ public class SequenceDiagramParserStrategy implements IParserStrategy {
 							//SootMethodRef plasdf = x.getMethodRef();
 							//String afds = "";
 						}*/
-						if(z instanceof AssignStmt){
-							Value x = ((AssignStmt) z).getRightOp();
+						if(value instanceof AssignStmt){
+							Value x = ((AssignStmt) value).getRightOp();
 							if (x instanceof AssignStmt){
 								InvokeExpr invkExpr = (InvokeExpr)x;
 								method = invkExpr.getMethod();
 							}
+						}
+						
+						if (method != null && !method.hasActiveBody()){
+							//CallGraphContextResolutionCommand cgRes = new CallGraphContextResolutionCommand();
+							
+							List<SootMethod> resolved = resolveCommand.resolve(g, method, method.getDeclaringClass(), v, e);
+							//List<SootMethod> resolved = cgRes.resolve(g, method, method.getDeclaringClass(), v, e);
+							//List<SootMethod> resolved = resolveCommand.resolve(g, rootMethod, rootMethod.getDeclaringClass(), v);
+							e.getSrc();
+							if (!resolved.isEmpty()){
+								method = resolved.get(0);
+							}
+							
 							
 						}
-						if (method != null && method.hasActiveBody()){
+						if (method != null){// && method.hasActiveBody()){
 						examinationList.add(new SequenceMethodUMLObject(callingClass, method));
 						examinationList.addAll(examine(g, method, method.getDeclaringClass(), v, remainingDepth - 1));
 						examinationList.add(new ReturnUMLObject(callingClass, method));
 						} else if (method != null){
-							resolveCommand.resolve(g, method, method.getDeclaringClass(), v);
+							List<SootMethod> resolved = resolveCommand.resolve(g, method, method.getDeclaringClass(), v, e);
+							if (!resolved.isEmpty()){
+							//	method = resolved.get(0);
+							}
+							//resolveCommand.resolve(g, method, method.getDeclaringClass(), v);
 						}
 	
 						
@@ -161,9 +193,9 @@ public class SequenceDiagramParserStrategy implements IParserStrategy {
 	//					}
 						
 						//LinkedRValue aasdfaw = (LinkedRValue) a;
-						Type grr = a.getValue().getType();
-						a.getClass();
-						String adsdfasdf = "";
+						//Type grr = a.getValue().getType();
+						//a.getClass();
+						//String adsdfasdf = "";
 						
 					}
 				}

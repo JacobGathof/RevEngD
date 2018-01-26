@@ -163,3 +163,4 @@ RevEngD.iml
 
 #local property files
 settings/default.prop
+*.prop

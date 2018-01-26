@@ -9,11 +9,12 @@ import soot.Scene;
 import soot.SootClass;
 import soot.SootMethod;
 import soot.jimple.toolkits.callgraph.CallGraph;
+import soot.jimple.toolkits.callgraph.Edge;
 
 public class FirstContextResolutionCommand implements ISDContextResolutionCommand {
 
 	@Override
-	public List<SootMethod> resolve(CallGraph g, SootMethod rootMethod, SootClass callingClass, Scene v) {
+	public List<SootMethod> resolve(CallGraph g, SootMethod rootMethod, SootClass callingClass, Scene v, Edge e) {
 		// TODO Auto-generated method stub
 		Hierarchy hierarchy = v.getActiveHierarchy();
 		  List<SootMethod> possibleMethods = hierarchy.resolveAbstractDispatch(rootMethod.getDeclaringClass(), rootMethod);

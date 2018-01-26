@@ -232,7 +232,7 @@ public class Configuration {
 					Class clazz = Class.forName(command);
 					if (ISDContextResolutionCommand.class.isAssignableFrom(clazz)) {
 						ISDContextResolutionCommand comm = (ISDContextResolutionCommand) clazz.newInstance();
-						UMLStrategies.add(new SequenceDiagramParserStrategy("main", 2, comm));
+						UMLStrategies.add(new SequenceDiagramParserStrategy("main", 10, comm));
 					} else {
 						System.out.println("Given strategy " + command + " is not a valid command");
 						System.exit(0);

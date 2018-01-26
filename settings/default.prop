@@ -4,4 +4,4 @@ classes=csse374.revengd.project.App
 strategies=csse374.revengd.project.parserstrategies.SequenceDiagramParserStrategy
 builder=csse374.revengd.project.builder.SequenceDiagramBuilder
 displayer=csse374.revengd.project.displayer.PlantDisplayer
-command=csse374.revengd.project.parserstrategies.resolutioncommands.CallGraphContextResolutionCommand
+command=csse374.revengd.project.parserstrategies.resolutioncommands.HierarchyContextResolutionCommand
