@@ -3,8 +3,11 @@ package csse374.revengd.project.parsers;
 import java.util.Arrays;
 import java.util.List;
 
+import com.beust.jcommander.internal.Lists;
+
 import csse374.revengd.project.Configuration;
 import csse374.revengd.project.umlobjects.IUMLObject;
+import csse374.revengd.project.umlobjects.PackageHelper;
 
 public class PackageParserFilter implements IParserFilter{
 
@@ -21,13 +24,15 @@ public class PackageParserFilter implements IParserFilter{
     public List<IUMLObject> parse(String className) {
     	List<IUMLObject> sootObjects = parser.parse(className);
 		for(int i = 0; i < sootObjects.size(); i++) {
-			IUMLObject obj = sootObjects.get(i);
-			String pack = className.split("\\.")[0];
 			boolean samePack = true;
+			IUMLObject obj = sootObjects.get(i);
+			List<String> pack = PackageHelper.getPackageNames(className);
 			List<String> packages = obj.getPackage();
-			for(String s : packages) {
-				if(!s.equals(pack)) {
-					samePack = false;
+			for(String s : pack) {
+				for(String ss : packages) {
+					if(!ss.contains(s) && !s.contains(ss)) {
+						samePack = false;
+					}
 				}
 			}
 			if(!samePack) {

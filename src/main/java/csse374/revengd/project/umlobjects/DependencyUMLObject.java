@@ -53,6 +53,6 @@ public class DependencyUMLObject implements IUMLObject{
     
     @Override
 	public List<String> getPackage() {
-		return (List<String>) Lists.newArrayList(source.getName().split("\\.")[0], reference.getName().split("\\.")[0]);
+    	return PackageHelper.getPackageNames(source.getName(), reference.getName());
 	}
 }

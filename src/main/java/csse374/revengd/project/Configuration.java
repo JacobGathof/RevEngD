@@ -14,6 +14,7 @@ import java.util.Scanner;
 import csse374.revengd.project.builder.IBuilder;
 import csse374.revengd.project.displayer.IDisplayer;
 import csse374.revengd.project.displayer.PlantDisplayer;
+import csse374.revengd.project.parsers.BlacklistParserFilter;
 import csse374.revengd.project.parsers.IParser;
 import csse374.revengd.project.parsers.IParserDetector;
 import csse374.revengd.project.parsers.IParserFilter;
@@ -55,7 +56,7 @@ public class Configuration {
 		for(int i = 1; i < args.length; i++) {
 			String[] arg = args[i].split("=");
 			String key = arg[0].trim().toLowerCase();
-			String vals[] = arg[1].trim().replace(" ", "").split(",");
+			String vals[] = arg[1].trim().split(",");
 			parameters.put(key, Arrays.asList(vals));
 		}
 	}
@@ -78,7 +79,7 @@ public class Configuration {
 			}
 			
 			String key = args[0].trim().toLowerCase();
-			String vals[] = args[1].trim().replace(" ", "").split(",");	
+			String vals[] = args[1].trim().split(",");	
 			parameters.put(key, Arrays.asList(vals));
 		}
 		
@@ -214,6 +215,11 @@ public class Configuration {
 				System.out.println("Could not instantiate class " + filter);
 			}
 		}
+		
+		List<String> bl = getValues("blacklist");
+		List<String> wl = getValues("whitelist");
+		parser = new BlacklistParserFilter(parser, bl, wl);
+		
 		return parser;
 	}
 	
