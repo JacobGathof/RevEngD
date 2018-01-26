@@ -12,6 +12,8 @@ import java.util.Scanner;
 
 import csse374.revengd.project.builder.IBuilder;
 import csse374.revengd.project.displayer.IDisplayer;
+import csse374.revengd.project.displayer.PlantDisplayer;
+import csse374.revengd.project.parsers.BlacklistParserFilter;
 import csse374.revengd.project.parsers.IParser;
 import csse374.revengd.project.parsers.detectors.IParserDetector;
 import csse374.revengd.project.parsers.filters.IParserFilter;
@@ -204,6 +206,10 @@ public class Configuration {
 	public IParser applyFilters(IParser parser) {
 		parser = new RepeatParserFilter(parser);
 
+		List<String> bl = getValues("blacklist");
+		List<String> wl = getValues("whitelist");
+		parser = new BlacklistParserFilter(parser, bl, wl);
+		
 		if(!displaySynthetic()){
 			parser = new SyntheticParserFilter(parser);
 		}
@@ -232,6 +238,7 @@ public class Configuration {
 				System.out.println("Could not instantiate class " + filter);
 			}
 		}
+		
 		return parser;
 	}
 	

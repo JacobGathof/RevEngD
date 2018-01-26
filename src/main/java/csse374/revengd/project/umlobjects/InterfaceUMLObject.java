@@ -35,6 +35,6 @@ public class InterfaceUMLObject implements IUMLObject{
 	
 	@Override
 	public List<String> getPackage() {
-		return (List<String>) Lists.newArrayList(inter.getName().split("\\.")[0]);
+		return PackageHelper.getPackageNames(inter.getName());
 	}
 }

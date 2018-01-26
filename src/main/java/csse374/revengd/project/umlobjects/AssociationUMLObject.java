@@ -19,6 +19,7 @@ public class AssociationUMLObject implements IUMLObject {
 
     @Override
     public String toUML(boolean full) {
+    	if(reference.toString().equals("*")) return "";
         if(full){
             if (manyToOne) {
                 return source.toString() + " --* \"1..*\" " + cleanName(reference.toString());
@@ -52,6 +53,6 @@ public class AssociationUMLObject implements IUMLObject {
     
     @Override
 	public List<String> getPackage() {
-		return (List<String>) Lists.newArrayList(source.getName().split("\\.")[0], reference.getName().split("\\.")[0]);
+    	return PackageHelper.getPackageNames(source.getName(), reference.getName());
 	}
 }
