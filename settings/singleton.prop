@@ -1,8 +1,10 @@
 path=/home/trevor/IdeaProjects/Lab6-1/Lab6-1/bin
 classes=java.lang.Runtime,java.util.Calendar,java.awt.Desktop
-filters=csse374.revengd.project.parsers.filters.PackageParserFilter
+filters=
 strategies=csse374.revengd.project.parserstrategies.InheritanceParserStrategy,csse374.revengd.project.parserstrategies.InstanceVariableParserStrategy,csse374.revengd.project.parserstrategies.MethodParserStrategy,csse374.revengd.project.parserstrategies.SuperClassParserStrategy
 builder=csse374.revengd.project.builder.PlantUMLBuilder
 displayer=csse374.revengd.project.displayer.PlantDisplayer
 detectors=csse374.revengd.project.parsers.detectors.SingletonParserDetector
+blacklist=java,sun
+whitelist=Calendar,Runtime,Desktop
 command=

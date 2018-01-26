@@ -144,6 +144,7 @@ public class Configuration {
 				System.out.println("Could not instantiate class " + detector);
 			}
 		}
+		parser = new RepeatParserFilter(parser);
 		return parser;
 	}
 
