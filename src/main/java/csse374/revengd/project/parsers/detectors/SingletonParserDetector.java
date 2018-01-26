@@ -1,15 +1,16 @@
-package csse374.revengd.project.parsers;
+package csse374.revengd.project.parsers.detectors;
 
+import csse374.revengd.project.parsers.IParser;
+import csse374.revengd.project.parsers.detectors.IParserDetector;
 import csse374.revengd.project.umlobjects.ClassUMLObject;
 import csse374.revengd.project.umlobjects.IUMLObject;
-import csse374.revengd.project.umlobjects.MethodUMLObject;
 import csse374.revengd.project.umlobjects.StereotypeUMLObject;
 import soot.SootClass;
 import soot.SootMethod;
 
 import java.util.List;
 
-public class SingletonParserDetector implements IParserDetector{
+public class SingletonParserDetector implements IParserDetector {
     IParser parser;
 
     public SingletonParserDetector(IParser parser){

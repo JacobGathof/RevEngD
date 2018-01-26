@@ -1,5 +1,7 @@
-package csse374.revengd.project.parsers;
+package csse374.revengd.project.parsers.filters;
 
+import csse374.revengd.project.parsers.IParser;
+import csse374.revengd.project.parsers.filters.IParserFilter;
 import csse374.revengd.project.umlobjects.IUMLObject;
 
 import java.util.ArrayList;
@@ -7,7 +9,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-public class RepeatParserFilter implements IParserFilter{
+public class RepeatParserFilter implements IParserFilter {
     IParser inner;
 
     public RepeatParserFilter(IParser inner){
