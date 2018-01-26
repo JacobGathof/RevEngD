@@ -10,6 +10,7 @@ import csse374.revengd.project.parserstrategies.resolutioncommands.FirstContextR
 import csse374.revengd.project.parserstrategies.resolutioncommands.HierarchyContextResolutionCommand;
 import csse374.revengd.project.parserstrategies.resolutioncommands.ISDContextResolutionCommand;
 import csse374.revengd.project.parserstrategies.resolutioncommands.NullContextResolutionCommand;
+import csse374.revengd.project.umlobjects.CommentUMLObject;
 import csse374.revengd.project.umlobjects.IUMLObject;
 import csse374.revengd.project.umlobjects.MethodUMLObject;
 import csse374.revengd.project.umlobjects.ReturnUMLObject;
@@ -87,14 +88,14 @@ public class SequenceDiagramParserStrategy implements IParserStrategy {
 	private List<IUMLObject> examine(CallGraph g, SootMethod rootMethod, SootClass callingClass,  Scene v, int remainingDepth){
 		List<IUMLObject> examinationList = new ArrayList<>();
 		Iterator<MethodOrMethodContext> children;
-		Iterator<Edge> testing;
+		Iterator<Edge> reversed;
 		//if (rootMethod.hasActiveBody()){
 			if (remainingDepth == 0){
 				return new ArrayList<>();
 			}
 			
 			children = new Targets(g.edgesOutOf(rootMethod));
-			testing = g.edgesOutOf(rootMethod);
+			reversed = g.edgesOutOf(rootMethod);
 			
 			List<Edge> IWantToSeeThis = new ArrayList<Edge>();
 			/*while(testing.hasNext()){
@@ -102,6 +103,13 @@ public class SequenceDiagramParserStrategy implements IParserStrategy {
 			}
 			String breakp = "Breakpoint here";
 			*/
+			List<Edge> testingList = new ArrayList<Edge>();
+			while(reversed.hasNext())
+			{
+				testingList.add(0,reversed.next());
+			}
+			Iterator<Edge> testing = testingList.iterator();
+			
 			while(testing.hasNext()){
 				Edge e = testing.next();
 				//Unit asdf = e.srcUnit();
@@ -166,20 +174,17 @@ public class SequenceDiagramParserStrategy implements IParserStrategy {
 							e.getSrc();
 							if (!resolved.isEmpty()){
 								method = resolved.get(0);
+								for(int j = 1; j < resolved.size(); j++){
+									examinationList.add(new CommentUMLObject(new SequenceMethodUMLObject(callingClass, resolved.get(j))));
+								}
 							}
 							
 							
 						}
 						if (method != null){// && method.hasActiveBody()){
-						examinationList.add(new SequenceMethodUMLObject(callingClass, method));
-						examinationList.addAll(examine(g, method, method.getDeclaringClass(), v, remainingDepth - 1));
-						examinationList.add(new ReturnUMLObject(callingClass, method));
-						} else if (method != null){
-							List<SootMethod> resolved = resolveCommand.resolve(g, method, method.getDeclaringClass(), v, e);
-							if (!resolved.isEmpty()){
-							//	method = resolved.get(0);
-							}
-							//resolveCommand.resolve(g, method, method.getDeclaringClass(), v);
+							examinationList.add(new SequenceMethodUMLObject(callingClass, method));
+							examinationList.addAll(examine(g, method, method.getDeclaringClass(), v, remainingDepth - 1));
+							examinationList.add(new ReturnUMLObject(callingClass, method));
 						}
 	
 						

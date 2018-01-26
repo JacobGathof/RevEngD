@@ -2,8 +2,10 @@ package csse374.revengd.project.parserstrategies.resolutioncommands;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import soot.Scene;
 import soot.SootClass;
@@ -26,14 +28,14 @@ public class IntersectionContextResolutionCommandMacro implements ISDContextReso
 		//for(ISDContextResolutionCommand e : resolutionCommands){
 		for(int i =0; i < resolutionCommands.size(); i++){
 			methods = resolutionCommands.get(i).resolve(g, topMethod, clazz, v, e);
-			Set<SootMethod> indivSet = new HashSet<SootMethod>();
+			Set<SootMethod> indivSet = new LinkedHashSet<SootMethod>();
 			indivSet.addAll(methods);
 			resolutions.add(indivSet);
 			/*for(SootMethod f : methods){
 				indivSet.add(f);
 			}*/
 		}
-		Set<SootMethod> fSet = new HashSet<SootMethod>();
+		Set<SootMethod> fSet = new LinkedHashSet<SootMethod>();
 		if(resolutions.size() > 0){
 			fSet = resolutions.get(0);
 		}
