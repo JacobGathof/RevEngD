@@ -9,5 +9,4 @@ public interface IUMLObject {
     public int getModifiers();
     public SootClass getSootClass();
     public List<String> getPackage();
-    
 }

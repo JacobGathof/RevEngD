@@ -1,6 +1,6 @@
 path=C:/Users/mcclarjp/Documents/CSSE 374/Programs/RevengdContextTest/bin
 classes=Application.App
-filters=
+filters=csse374.revengd.project.parsers.filters.PackageParserFilter
 strategies=csse374.revengd.project.parserstrategies.SequenceDiagramParserStrategy
 builder=csse374.revengd.project.builder.SequenceDiagramBuilder
 displayer=csse374.revengd.project.displayer.PlantDisplayer

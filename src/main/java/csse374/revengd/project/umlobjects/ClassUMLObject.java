@@ -37,7 +37,7 @@ public class ClassUMLObject implements IUMLObject{
 
 	@Override
 	public List<String> getPackage() {
-		return (List<String>) Lists.newArrayList(clazz.getName().split("\\.")[0]);
+		return PackageHelper.getPackageNames(clazz.getName());
 	}
     
 }

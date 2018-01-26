@@ -2,7 +2,6 @@ package csse374.revengd.project;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,9 +13,12 @@ import java.util.Scanner;
 import csse374.revengd.project.builder.IBuilder;
 import csse374.revengd.project.displayer.IDisplayer;
 import csse374.revengd.project.displayer.PlantDisplayer;
+import csse374.revengd.project.parsers.BlacklistParserFilter;
 import csse374.revengd.project.parsers.IParser;
-import csse374.revengd.project.parsers.IParserDetector;
-import csse374.revengd.project.parsers.IParserFilter;
+import csse374.revengd.project.parsers.detectors.IParserDetector;
+import csse374.revengd.project.parsers.filters.IParserFilter;
+import csse374.revengd.project.parsers.filters.RepeatParserFilter;
+import csse374.revengd.project.parsers.filters.SyntheticParserFilter;
 import csse374.revengd.project.parserstrategies.IParserStrategy;
 import csse374.revengd.project.parserstrategies.SequenceDiagramParserStrategy;
 import csse374.revengd.project.parserstrategies.resolutioncommands.ISDContextResolutionCommand;
@@ -125,7 +127,7 @@ public class Configuration {
 			try {
 				Class clazz = Class.forName(detector);
 				if(IParserDetector.class.isAssignableFrom(clazz)){
-					parser = (IParserFilter) clazz.getConstructor(IParser.class).newInstance(parser);
+					parser = (IParserDetector) clazz.getConstructor(IParser.class).newInstance(parser);
 				}
 				else{
 					System.out.println("Given detector " + detector + " is not a valid detector");
@@ -191,9 +193,26 @@ public class Configuration {
 	public List<String> getFilters() {
 		return getValues("filters");
 	}
+
+	public boolean displaySynthetic(){
+		return Boolean.parseBoolean(getValue("synthetic"));
+	}
+
+	public int getDepth(){
+		return Integer.parseInt(getValue("depth"));
+	}
 	
 	public IParser applyFilters(IParser parser) {
+		parser = new RepeatParserFilter(parser);
+
+		List<String> bl = getValues("blacklist");
+		List<String> wl = getValues("whitelist");
+		parser = new BlacklistParserFilter(parser, bl, wl);
 		
+		if(!displaySynthetic()){
+			parser = new SyntheticParserFilter(parser);
+		}
+
 		List<String> filt = getValues("filters");
 		if(filt == null) return parser;
 		
@@ -218,6 +237,7 @@ public class Configuration {
 				System.out.println("Could not instantiate class " + filter);
 			}
 		}
+		
 		return parser;
 	}
 	
@@ -232,7 +252,7 @@ public class Configuration {
 					Class clazz = Class.forName(command);
 					if (ISDContextResolutionCommand.class.isAssignableFrom(clazz)) {
 						ISDContextResolutionCommand comm = (ISDContextResolutionCommand) clazz.newInstance();
-						UMLStrategies.add(new SequenceDiagramParserStrategy("main", 10, comm));
+						UMLStrategies.add(new SequenceDiagramParserStrategy("main", getDepth(), comm));
 					} else {
 						System.out.println("Given strategy " + command + " is not a valid command");
 						System.exit(0);

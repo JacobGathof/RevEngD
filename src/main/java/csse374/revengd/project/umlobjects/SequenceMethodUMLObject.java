@@ -43,8 +43,7 @@ public class SequenceMethodUMLObject implements IUMLObject {
 
 	@Override
 	public List<String> getPackage() {
-
-		return (List<String>) Lists.newArrayList(source.getName().split("\\.")[0], target.getDeclaringClass().getName().split("\\.")[0]);
+		return PackageHelper.getPackageNames(source.getName(), target.getName());
 	}
 
 
