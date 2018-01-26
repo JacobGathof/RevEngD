@@ -17,6 +17,7 @@ import csse374.revengd.project.displayer.PlantDisplayer;
 import csse374.revengd.project.parsers.IParser;
 import csse374.revengd.project.parsers.IParserDetector;
 import csse374.revengd.project.parsers.IParserFilter;
+import csse374.revengd.project.parsers.RepeatParserFilter;
 import csse374.revengd.project.parserstrategies.IParserStrategy;
 import csse374.revengd.project.parserstrategies.SequenceDiagramParserStrategy;
 import csse374.revengd.project.parserstrategies.resolutioncommands.ISDContextResolutionCommand;
@@ -193,7 +194,7 @@ public class Configuration {
 	}
 	
 	public IParser applyFilters(IParser parser) {
-		
+		parser = new RepeatParserFilter(parser);
 		List<String> filt = getValues("filters");
 		if(filt == null) return parser;
 		

@@ -11,6 +11,7 @@ public class ColoredUMLObject implements IUMLObject {
     public ColoredUMLObject(IUMLObject inner, String color){
         this.inner = inner;
         this.color = color;
+
     }
 
     @Override

@@ -43,7 +43,9 @@ public class MasterParser implements IParser{
 		options.set_allow_phantom_refs(true);
 
 		v.setSootClassPath(v.defaultClassPath());
-		v.extendSootClassPath(path);
+		if(path != null) {
+			v.extendSootClassPath(path);
+		}
 
 
 	}
