@@ -7,3 +7,4 @@ displayer=csse374.revengd.project.displayer.PlantDisplayer
 command=csse374.revengd.project.parserstrategies.resolutioncommands.CallGraphContextResolutionCommand
 synthetic=false
 depth=5
+

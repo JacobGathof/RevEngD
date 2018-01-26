@@ -11,6 +11,7 @@ import soot.Scene;
 import soot.SootClass;
 import soot.SootMethod;
 import soot.jimple.toolkits.callgraph.CallGraph;
+import soot.jimple.toolkits.callgraph.Edge;
 
 public class UnionContextResolutionCommandMacro implements ISDContextResolutionCommand {
 
@@ -19,14 +20,14 @@ public class UnionContextResolutionCommandMacro implements ISDContextResolutionC
 		this.resolutionCommands = resolutionCommands;
 	}
 	@Override
-	public List<SootMethod> resolve(CallGraph g, SootMethod topMethod, SootClass clazz, Scene v) {
+	public List<SootMethod> resolve(CallGraph g, SootMethod topMethod, SootClass clazz, Scene v, Edge e) {
 		// TODO Auto-generated method stub
 		Set<SootMethod> resolutions = new HashSet<SootMethod>();
 
 		List<SootMethod> methods = new ArrayList<SootMethod>();
 
-		for(ISDContextResolutionCommand e : resolutionCommands){
-			methods = e.resolve(g, topMethod, clazz, v);
+		for(ISDContextResolutionCommand cmd : resolutionCommands){
+			methods = cmd.resolve(g, topMethod, clazz, v, e);
 			for(SootMethod f : methods){
 				resolutions.add(f);
 			}
