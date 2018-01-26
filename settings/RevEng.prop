@@ -1,8 +1,9 @@
 path=/home/trevor/IdeaProjects/RevEngD/build/classes/main
 classes=csse374.revengd.project.App
-filters=csse374.revengd.project.parsers.filters.PackageParserFilter
+filters=
 strategies=csse374.revengd.project.parserstrategies.AssociationParserStrategy,csse374.revengd.project.parserstrategies.InheritanceParserStrategy,csse374.revengd.project.parserstrategies.InstanceVariableParserStrategy,csse374.revengd.project.parserstrategies.LocalVariableDependencyParserStrategy,csse374.revengd.project.parserstrategies.MethodParserStrategy,csse374.revengd.project.parserstrategies.SuperClassParserStrategy
 builder=csse374.revengd.project.builder.PlantUMLBuilder
 displayer=csse374.revengd.project.displayer.PlantDisplayer
 detectors=csse374.revengd.project.parsers.detectors.CompositionOverInheritanceParserDetector
+blacklist=java,soot,sun
 command=
