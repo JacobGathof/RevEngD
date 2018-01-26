@@ -25,7 +25,7 @@ public class BlacklistParserFilter implements IParserFilter {
 
 	public List<IUMLObject> parse(String className) {
 		List<IUMLObject> sootObjects = parser.parse(className);
-		
+
 		for (int i = 0; i < sootObjects.size(); i++) {
 			IUMLObject obj = sootObjects.get(i);
 

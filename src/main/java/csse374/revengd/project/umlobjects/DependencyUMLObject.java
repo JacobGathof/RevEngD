@@ -20,6 +20,7 @@ public class DependencyUMLObject implements IUMLObject{
 
     @Override
     public String toUML(boolean full) {
+    	if(reference.toString().equals("*")) return "";
         if(full) {
             if (manyToOne) {
                 return source.toString() + " --> \"1..*\" " + cleanName(reference.toString());
