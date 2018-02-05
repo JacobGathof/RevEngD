@@ -1,0 +1,4 @@
+Milestone 3 review January 26th, 2018
+
+Interesting to use Reflection for command line arguments
+*Not too many notes to mention*
