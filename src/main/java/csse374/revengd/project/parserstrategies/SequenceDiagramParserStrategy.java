@@ -51,21 +51,22 @@ import soot.jimple.toolkits.callgraph.Targets;
 import soot.toolkits.graph.ExceptionalUnitGraph;
 import soot.toolkits.graph.UnitGraph;
 
-public class SequenceDiagramParserStrategy implements IParserStrategy {
+public class SequenceDiagramParserStrategy extends AbstractSequenceDiagramParserStrategy /*implements IParserStrategy*/ {
 
-	private String startMethodName;
+	/*private String startMethodName;
 	private int depthToLook;
 	//private ISDContextResolutionCommand resolveCommand = new CallGraphContextResolutionCommand();
 	private ISDContextResolutionCommand resolveCommand = new HierarchyContextResolutionCommand();
-	//private ISDContextResolutionCommand resolveCommand = new FirstContextResolutionCommand();
+	//private ISDContextResolutionCommand resolveCommand = new FirstContextResolutionCommand();*/
 	
 	
 	public SequenceDiagramParserStrategy (String methodName, int aDepthToLook, ISDContextResolutionCommand command){
-		startMethodName = methodName;
+		super(methodName, aDepthToLook, command);
+		/*startMethodName = methodName;
 		depthToLook = aDepthToLook;
-		resolveCommand = command;
+		resolveCommand = command;*/
 	}
-	@Override
+	/*@Override
 	public List<IUMLObject> parse(SootClass clazz, List<SootClass> dependencies, Scene v) {
 	    clazz.setApplicationClass();
 	    v.setMainClass(clazz);
@@ -83,9 +84,9 @@ public class SequenceDiagramParserStrategy implements IParserStrategy {
 		System.out.println("about to examine");
 		List<IUMLObject> temp = examine(g, startMethod, clazz, v, depthToLook);
 		return temp;
-	}
+	}*/
 	
-	private List<IUMLObject> examine(CallGraph g, SootMethod rootMethod, SootClass callingClass,  Scene v, int remainingDepth){
+	protected List<IUMLObject> examine(CallGraph g, SootMethod rootMethod, SootClass callingClass,  Scene v, int remainingDepth){
 		List<IUMLObject> examinationList = new ArrayList<>();
 		Iterator<MethodOrMethodContext> children;
 		Iterator<Edge> reversed;
