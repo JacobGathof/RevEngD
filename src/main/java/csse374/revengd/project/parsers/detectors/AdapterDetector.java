@@ -1,9 +1,11 @@
 package csse374.revengd.project.parsers.detectors;
 
 import java.util.List;
+import java.util.Random;
 
 import csse374.revengd.project.parsers.IParser;
 import csse374.revengd.project.umlobjects.ArrowCommentUMLObject;
+import csse374.revengd.project.umlobjects.AssociationUMLObject;
 import csse374.revengd.project.umlobjects.ClassUMLObject;
 import csse374.revengd.project.umlobjects.IUMLObject;
 import csse374.revengd.project.umlobjects.InterfaceUMLObject;
@@ -28,6 +30,8 @@ public class AdapterDetector implements IParserDetector{
             IUMLObject object = objects.get(i);
             IUMLObject target = null;
             IUMLObject adaptee = null;
+            
+            IUMLObject adaptsArrow = null;
             
             int targetIndex = -1;
             int adapteeIndex = -1;
@@ -76,32 +80,50 @@ public class AdapterDetector implements IParserDetector{
                     			adapteeIndex = j;
                         	}
                         }
-                    }
-                    if(adaptee != null) {
-                    	break;
+                        
+                        
+                        if(adaptee != null) {
+                        	for(int k = 0; k < objects.size(); k++) {
+                        		IUMLObject potArrow = objects.get(k);
+                        		if(potArrow instanceof AssociationUMLObject) {
+                        			if(potArrow.toUML(true).contains(clazz.getName()) && potArrow.toUML(true).contains(clazz2.getName())) {
+                        				adaptsArrow = potArrow;
+                        				break;
+                        			}
+                        		}
+                        	}
+                        	break;
+                        }   
                     }
                 }
             }
             
             if(foundTarget && foundAdaptee) {
-            	IUMLObject newObj = new StereotypeUMLObject(object, "Adapter");
+            	
+            	Random r = new Random();
+                int colorVal = r.nextInt(0xAAAAAA);
+                String color = Integer.toHexString(colorVal);
+            	
+            	IUMLObject newObj = new StereotypeUMLObject(object, "Adapter", color);
                 objects.remove(object);
                 objects.add(i, newObj);
                 
-                IUMLObject newObj2 = new StereotypeUMLObject(adaptee, "Adaptee");
+                IUMLObject newObj2 = new StereotypeUMLObject(adaptee, "Adaptee", color);
                 objects.remove(adaptee);
                 objects.add(adapteeIndex, newObj2);
                 
-                IUMLObject newObj3 = new StereotypeUMLObject(target, "Target");
+                IUMLObject newObj3 = new StereotypeUMLObject(target, "Target", color);
                 objects.remove(target);
                 objects.add(targetIndex, newObj3);
                 
                 System.out.println(newObj3.toUML(true));
                 System.out.println(newObj2.toUML(true));
                 
-                objects.add(new ArrowCommentUMLObject(newObj, "<<Adapts>>"));
+                if(adaptsArrow != null) {
+	                objects.remove(adaptsArrow);
+	                objects.add(new ArrowCommentUMLObject(adaptsArrow, "<<Adapts>>"));
+                }
             }
-            
             
         }
                     
