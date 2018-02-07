@@ -4,7 +4,7 @@ import java.util.List;
 
 import soot.SootClass;
 
-public class CommentUMLObject implements IUMLObject {
+public class CommentUMLObject implements IUMLObjectDecorator {
 
 	IUMLObject inner;
 
@@ -33,4 +33,8 @@ public class CommentUMLObject implements IUMLObject {
         return inner.getPackage();
     }
 
+    @Override
+    public IUMLObject getInner() {
+        return inner;
+    }
 }

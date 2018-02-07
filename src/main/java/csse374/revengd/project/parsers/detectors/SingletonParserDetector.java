@@ -35,8 +35,9 @@ public class SingletonParserDetector implements IParserDetector {
                     }
                 }
                 if(privCon && getIn){
-                    IUMLObject newObj = new StereotypeUMLObject(object, "Singleton");
+                    IUMLObject newObj = new StereotypeUMLObject(object, "Singleton", "blue");
                     objects.remove(object);
+                    i--;
                     objects.add(newObj);
                 }
             }
