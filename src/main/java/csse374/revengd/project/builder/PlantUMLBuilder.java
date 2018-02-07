@@ -18,12 +18,11 @@ public class PlantUMLBuilder implements IBuilder {
     public String build(List<IUMLObject> objects) {
         StringBuilder builder = new StringBuilder();
         builder.append("@startuml\n");
-        builder.append("skinparam class {\n" +
-                "\tBorderColor<<Singleton>> blue\n" +
-                "}\n");
         
         for(IUMLObject s : objects) {
-        	builder.append(s.toUML(full) + "\n");
+            if(s != null) {
+                builder.append(s.toUML(full) + "\n");
+            }
         }
 
         builder.append("@enduml");

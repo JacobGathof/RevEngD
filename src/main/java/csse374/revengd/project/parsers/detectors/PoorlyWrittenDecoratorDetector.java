@@ -54,25 +54,29 @@ public class PoorlyWrittenDecoratorDetector implements IParserDetector{
                         }
                     }
                     if (superField && superArgument) {
+                        boolean missingMethods = false;
                         for (SootMethod method : superMethods) {
+                            missingMethods = true;
                             objects.add(new MethodColorerUMLObject(new MethodUMLObject(object.getSootClass(), method), "red"));
                         }
-                        objects.add(new StereotypeUMLObject(object, "Bad Decorator"));
-                        objects.remove(object);
-                        for(IUMLObject obj : objects){
-                            if((obj instanceof ClassUMLObject || obj instanceof AbstractClassUMLObject || obj instanceof InterfaceUMLObject)
-                                    && obj.getSootClass().getType().equals(type)){
-                                objects.add(new StereotypeUMLObject(obj, "Component"));
-                                objects.remove(obj);
-                                break;
+                        if(missingMethods) {
+                            objects.add(new StereotypeUMLObject(object, "Bad Decorator", "black"));
+                            objects.remove(object);
+                            for (IUMLObject obj : objects) {
+                                if ((obj instanceof ClassUMLObject || obj instanceof AbstractClassUMLObject || obj instanceof InterfaceUMLObject)
+                                        && obj.getSootClass().getType().equals(type)) {
+                                    objects.add(new StereotypeUMLObject(obj, "Component", "black"));
+                                    objects.remove(obj);
+                                    break;
+                                }
                             }
-                        }
-                        for(IUMLObject obj : objects){
-                            if((obj instanceof InheritanceRelationUMLObject || obj instanceof SuperclassUMLObject)
-                                    && obj.getSootClass().getType().equals(clazz.getType())){
-                                objects.add(new ArrowCommentUMLObject(obj, "<<Decorates>>"));
-                                objects.remove(obj);
-                                break;
+                            for (IUMLObject obj : objects) {
+                                if ((obj instanceof InheritanceRelationUMLObject || obj instanceof SuperclassUMLObject)
+                                        && obj.getSootClass().getType().equals(clazz.getType())) {
+                                    objects.add(new ArrowCommentUMLObject(obj, "<<Decorates>>"));
+                                    objects.remove(obj);
+                                    break;
+                                }
                             }
                         }
                     }

@@ -4,7 +4,7 @@ import soot.SootClass;
 
 import java.util.List;
 
-public class MethodColorerUMLObject implements IUMLObject{
+public class MethodColorerUMLObject implements IUMLObjectDecorator{
     IUMLObject inner;
     String color;
 
@@ -38,5 +38,10 @@ public class MethodColorerUMLObject implements IUMLObject{
     @Override
     public List<String> getPackage() {
         return inner.getPackage();
+    }
+
+    @Override
+    public IUMLObject getInner() {
+        return inner;
     }
 }
