@@ -29,7 +29,7 @@ public class BlacklistParserFilter implements IParserFilter {
 
 		for (int i = 0; i < sootObjects.size(); i++) {
 			IUMLObject obj = sootObjects.get(i);
-
+			
 			boolean samePack = true;
 			
 			List<String> packages = obj.getPackage();
@@ -50,11 +50,22 @@ public class BlacklistParserFilter implements IParserFilter {
 					}
 				}
 			}
-			if (!samePack) {
+			if (!samePack || isPrimitive(obj)) {
 				sootObjects.remove(obj);
 				i--;
 			}
 		}
 		return sootObjects;
 	}
+    
+    public boolean isPrimitive(IUMLObject obj) {
+    	return obj.toUML(true).equals("class boolean") || 
+    			obj.toUML(true).equals("class float") || 
+    			obj.toUML(true).equals("class double") || 
+    			obj.toUML(true).equals("class char") || 
+    			obj.toUML(true).equals("class *") || 
+    			obj.toUML(true).equals("class int") ||
+    			obj.toUML(true).equals("class long") || 
+    			obj.toUML(true).equals("class byte");
+    }
 }

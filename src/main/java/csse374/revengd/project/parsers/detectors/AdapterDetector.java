@@ -13,6 +13,7 @@ import csse374.revengd.project.umlobjects.StereotypeUMLObject;
 import soot.SootClass;
 import soot.SootField;
 import soot.SootMethod;
+import soot.Type;
 
 public class AdapterDetector implements IParserDetector{
 	IParser parser;
@@ -71,8 +72,10 @@ public class AdapterDetector implements IParserDetector{
                     if(object2 instanceof ClassUMLObject || object2 instanceof InterfaceUMLObject){
                     	
                         SootClass clazz2 = object2.getSootClass();
+                       
                         
                         for(SootField f : clazz.getFields()) {
+                        	
                         	System.out.println(clazz2.toString() + " " + f.getType().toString());
                         	if(clazz2.toString().equals(f.getType().toString())) {
                         		adaptee = object2;
@@ -81,6 +84,19 @@ public class AdapterDetector implements IParserDetector{
                         	}
                         }
                         
+                        /*
+                        for(SootMethod method : clazz.getMethods()) {
+                        	if (method.getName().contains("<init>")) {
+                                for (Type paramType : method.getParameterTypes()) {
+                                    if (paramType.toString().equals(clazz2.toString())) {
+                                    	adaptee = object2;
+                            			foundAdaptee = true;
+                            			adapteeIndex = j;
+                                    }
+                                }
+                            }
+                        }
+                        */
                         
                         if(adaptee != null) {
                         	for(int k = 0; k < objects.size(); k++) {
