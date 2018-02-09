@@ -98,7 +98,7 @@ public class AdapterDetector implements IParserDetector{
                             }
                         }
                         
-                        /*
+                        
                         if(adaptee != null) {
                         	for(int k = 0; k < objects.size(); k++) {
                         		IUMLObject potArrow = objects.get(k);
@@ -111,7 +111,7 @@ public class AdapterDetector implements IParserDetector{
                         	}
                         	break;
                         } 
-                        */  
+                         
                     }
                 }
             }
