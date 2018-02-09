@@ -29,6 +29,16 @@ public class Configuration {
 	private boolean isSequenceDiagram;
 
 	private String defaultFile = Paths.get(System.getProperty("user.dir"), "settings", "default.prop").toString();
+	private String defaultJarSettings = "path=\n" +
+			"filters=csse374.revengd.project.parsers.filters.PackageParserFilter\n" +
+			"classes=java.lang.String\n" +
+			"strategies=csse374.revengd.project.parserstrategies.SuperClassParserStrategy\n" +
+			"builder=csse374.revengd.project.builder.PlantUMLBuilder\n" +
+			"displayer=csse374.revengd.project.displayer.PlantDisplayer\n" +
+			"command=\n" +
+			"synthetic=false\n" +
+			"depth=5\n" +
+			"\n";
 
 	public Configuration(String[] args) {
 		
@@ -62,7 +72,35 @@ public class Configuration {
 	}
 	
 	private void parseDefaultSettings() throws FileNotFoundException {
-		parseSettingsFile(defaultFile);
+		try {
+			parseSettingsFile(defaultFile);
+		}
+		catch(FileNotFoundException f){
+			parseSettings(defaultJarSettings);
+		}
+	}
+
+	private void parseSettings(String settings) {
+
+		Scanner scan = new Scanner(settings);
+		while(scan.hasNextLine()) {
+			String line = scan.nextLine();
+			if(line.length() < 2)
+				continue;
+			String args[] = line.split("=");
+			if(args.length == 1) {
+				parameters.put(args[0].trim().toLowerCase(), null);
+				continue;
+			}
+
+			String key = args[0].trim().toLowerCase();
+			String vals[] = args[1].trim().split(",");
+			parameters.put(key, Arrays.asList(vals));
+		}
+
+		printParameters();
+
+		scan.close();
 	}
 	
 	private void parseSettingsFile(String filename) throws FileNotFoundException {
