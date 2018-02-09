@@ -2,21 +2,36 @@
 ### Trevor Morton, John McClary, Jake Gathof
 
 
+
 ### About the project
-This application can analyze a Java project and generate and display the UML diagram or sequence diagram representing the class structure. 
-The project currently features several command line arguments: 
+To run the project, the only command line argument should be a path to a settings file to use. 
+        java project.jar C:/path/settings.prop
+        
+Settings files should define all of the options with which to render the diagram. 
+The available options are 
+1. path
+2. classes
+3. filters
+4. strategies
+5. builder
+6. displayer
+7. detectors
+8. blacklist
+9. whitelist
+10. command
 
-1.  -c,--classes <args>     classes to analyse
-2.  -p,--path <arg>        root project path
-3.  -po,--protected        protected scope
-4.  -pr,--private          private scope
-5.  -pu,--public           public scope
-6.  -r,--recursive <arg>   recursive depth of <arg>
-7.  -sd,--sequence         use sequence diagram
+Each argument must be a comma-separated fully-qualified class or package name. An example of how to format the settings file is provided below. 
 
 
-The command line argument should also contain a path to the root folder at the start and all of the base files you want to examine with a fully qualified name.
-
+path=C:/Users/joeschmo/Software Design/Lab7-1/bin
+classes=problem.client.EnumerationAdapter
+filters=csse374.revengd.project.parsers.filters.PackageParserFilter
+strategies=csse374.revengd.project.parserstrategies.AssociationParserStrategy
+builder=csse374.revengd.project.builder.PlantUMLBuilder
+displayer=csse374.revengd.project.displayer.PlantDisplayer
+detectors=csse374.revengd.project.parsers.detectors.AdapterDetector
+blacklist=sun,java
+whitelist=java.util.Enumeration,java.util.Iterator
 
 
 ## Team Contribution
@@ -32,3 +47,4 @@ Jake -  worked on the IUMLObjects and original sourceParser.
 
 Trevor - Worked on MasterParser, main method, command line arguments.  Worked on original UML diagram and designed filters.  Created workaround to avoid using SceneBuilder so it isn't necessary
 
+![UML-Diagram](https://ada.csse.rose-hulman.edu/Booyakashah/RevEngD/blob/master/Release/UML.svg)

@@ -96,12 +96,12 @@ public class DecoratorDetector implements IParserDetector{
                     Random r = new Random();
                     int colorVal = r.nextInt(0xAAAAAA);
                     String color = Integer.toHexString(colorVal);
-                    objects.add(new StereotypeUMLObject(object, "Decorator", color));
+                    objects.add(new StereotypeUMLObject(object, "Decorator" + color, color));
                     objects.remove(object);
                     for(IUMLObject obj : objects){
                         if((obj instanceof ClassUMLObject || obj instanceof AbstractClassUMLObject || obj instanceof InterfaceUMLObject)
                                 && obj.getSootClass().getType().equals(type)){
-                            objects.add(new StereotypeUMLObject(obj, "Component", color));
+                            objects.add(new StereotypeUMLObject(obj, "Component" + color, color));
                             objects.remove(obj);
                             break;
                         }
@@ -109,9 +109,21 @@ public class DecoratorDetector implements IParserDetector{
                     for(IUMLObject obj : objects){
                         if((obj instanceof InheritanceRelationUMLObject || obj instanceof SuperclassUMLObject)
                                 && obj.getSootClass().getType().equals(clazz.getType())){
-                            objects.add(new ArrowCommentUMLObject(obj, "<<Decorates>>"));
+                            objects.add(new ArrowCommentUMLObject(obj, "<<Decorates" + color + ">>"));
                             objects.remove(obj);
                             break;
+                        }
+                    }
+                    for(IUMLObject obj : objects){
+                        if((obj instanceof ClassUMLObject || obj instanceof AbstractClassUMLObject || obj instanceof InterfaceUMLObject)){
+                            if(obj.getSootClass().hasSuperclass() && !obj.getSootClass().getSuperclass().getType().toString().contains("java.lang.Object")) {
+                                Type superType = obj.getSootClass().getSuperclass().getType();
+                                if(superType.toString().equals(clazz.getType().toString())){
+                                    objects.add(new StereotypeUMLObject(obj, "Decorator" + color, color));
+                                    objects.remove(obj);
+                                    break;
+                                }
+                            }
                         }
                     }
                 }
