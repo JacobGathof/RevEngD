@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Random;
 
 import csse374.revengd.project.parsers.IParser;
+import csse374.revengd.project.umlobjects.AbstractClassUMLObject;
 import csse374.revengd.project.umlobjects.ArrowCommentUMLObject;
 import csse374.revengd.project.umlobjects.AssociationUMLObject;
 import csse374.revengd.project.umlobjects.ClassUMLObject;
@@ -37,17 +38,17 @@ public class AdapterDetector implements IParserDetector{
             int targetIndex = -1;
             int adapteeIndex = -1;
             
-            if(object instanceof ClassUMLObject || object instanceof InterfaceUMLObject){
+            if(object instanceof ClassUMLObject || object instanceof InterfaceUMLObject || object instanceof AbstractClassUMLObject){
                 SootClass clazz = object.getSootClass();
                 
                 /*Check for Target*/
                 for(int j = 0; j < objects.size(); j++){
                     IUMLObject object2 = objects.get(j);
-                    if(object2 instanceof ClassUMLObject || object2 instanceof InterfaceUMLObject){
+                    if(object2 instanceof ClassUMLObject || object2 instanceof InterfaceUMLObject || object2 instanceof AbstractClassUMLObject){
                     	
                         SootClass clazz2 = object2.getSootClass();
                         
-                        if(clazz.getInterfaceCount() > 0 && clazz.getInterfaces().getFirst().toString().equals(clazz2.toString())) {
+                        if(clazz.getInterfaceCount() > 0 && clazz.getInterfaces().getFirst().toString().equals(clazz2.toString()) || clazz.getSuperclass().getName().equals(clazz2.getName().toString())) {
                         	for(SootMethod m1 : clazz2.getMethods()) {
                         		for(SootMethod m2 : clazz.getMethods()) {
                         			if(m1.getName().equals(m2.getName())) {
@@ -69,14 +70,12 @@ public class AdapterDetector implements IParserDetector{
                 /*Check for Adaptee*/
                 for(int j = 0; j < objects.size(); j++){
                     IUMLObject object2 = objects.get(j);
-                    if(object2 instanceof ClassUMLObject || object2 instanceof InterfaceUMLObject){
+                    if(object2 instanceof ClassUMLObject || object2 instanceof InterfaceUMLObject || object2 instanceof AbstractClassUMLObject){
                     	
                         SootClass clazz2 = object2.getSootClass();
-                       
+                        
                         
                         for(SootField f : clazz.getFields()) {
-                        	
-                        	System.out.println(clazz2.toString() + " " + f.getType().toString());
                         	if(clazz2.toString().equals(f.getType().toString())) {
                         		adaptee = object2;
                     			foundAdaptee = true;
@@ -84,9 +83,11 @@ public class AdapterDetector implements IParserDetector{
                         	}
                         }
                         
-                        /*
+                        
+                        
                         for(SootMethod method : clazz.getMethods()) {
                         	if (method.getName().contains("<init>")) {
+                        		
                                 for (Type paramType : method.getParameterTypes()) {
                                     if (paramType.toString().equals(clazz2.toString())) {
                                     	adaptee = object2;
@@ -96,8 +97,8 @@ public class AdapterDetector implements IParserDetector{
                                 }
                             }
                         }
-                        */
                         
+                        /*
                         if(adaptee != null) {
                         	for(int k = 0; k < objects.size(); k++) {
                         		IUMLObject potArrow = objects.get(k);
@@ -109,12 +110,14 @@ public class AdapterDetector implements IParserDetector{
                         		}
                         	}
                         	break;
-                        }   
+                        } 
+                        */  
                     }
                 }
             }
             
             if(foundTarget && foundAdaptee) {
+            	
             	
             	Random r = new Random();
                 int colorVal = r.nextInt(0xAAAAAA);
